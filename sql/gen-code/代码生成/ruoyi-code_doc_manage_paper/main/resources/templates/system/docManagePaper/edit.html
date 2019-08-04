@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改作证-论文')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-docManagePaper-edit" th:object="${docManagePaper}">
+            <input id="paperId" name="paperId" th:field="*{paperId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">论文类别：</label>
+				<div class="col-sm-8">
+					<input id="paperKind" name="paperKind" th:field="*{paperKind}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">论文题目：</label>
+				<div class="col-sm-8">
+					<input id="paperTitle" name="paperTitle" th:field="*{paperTitle}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">作者id-备用：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" th:field="*{author1Id}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一作名字：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" th:field="*{author1Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一作专业：</label>
+				<div class="col-sm-8">
+					<input id="author1MajorId" name="author1MajorId" th:field="*{author1MajorId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作名字：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" th:field="*{author2Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作专业：</label>
+				<div class="col-sm-8">
+					<input id="author2MajorId" name="author2MajorId" th:field="*{author2MajorId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" th:field="*{authorNameOther}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">期刊名字：</label>
+				<div class="col-sm-8">
+					<input id="journalName" name="journalName" th:field="*{journalName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">刊号：</label>
+				<div class="col-sm-8">
+					<input id="journalNumber" name="journalNumber" th:field="*{journalNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">期刊检索号：</label>
+				<div class="col-sm-8">
+					<input id="journalSearchNumber" name="journalSearchNumber" th:field="*{journalSearchNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出版时间：</label>
+				<div class="col-sm-8">
+					<input id="publishDate" name="publishDate" th:field="*{publishDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">卷号：</label>
+				<div class="col-sm-8">
+					<input id="reelNumber" name="reelNumber" th:field="*{reelNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">起始页码：</label>
+				<div class="col-sm-8">
+					<input id="pageStart" name="pageStart" th:field="*{pageStart}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">终止页码：</label>
+				<div class="col-sm-8">
+					<input id="pageEnd" name="pageEnd" th:field="*{pageEnd}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">基金：</label>
+				<div class="col-sm-8">
+					<input id="funds" name="funds" th:field="*{funds}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">校内认定级别：</label>
+				<div class="col-sm-8">
+					<input id="levelIdCcec" name="levelIdCcec" th:field="*{levelIdCcec}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">附件：</label>
+				<div class="col-sm-8">
+					<input id="attachFile" name="attachFile" th:field="*{attachFile}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" th:field="*{notes}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/docManagePaper";
+		$("#form-docManagePaper-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-docManagePaper-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

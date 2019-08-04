@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('作证-论文列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								论文类别：<input type="text" name="paperKind"/>
+							</li>
+
+							<li>
+								论文题目：<input type="text" name="paperTitle"/>
+							</li>
+
+							<li>
+								作者id-备用：<input type="text" name="author1Id"/>
+							</li>
+
+							<li>
+								一作名字：<input type="text" name="author1Name"/>
+							</li>
+
+							<li>
+								一作专业：<input type="text" name="author1MajorId"/>
+							</li>
+
+							<li>
+								二作名字：<input type="text" name="author2Name"/>
+							</li>
+
+							<li>
+								二作专业：<input type="text" name="author2MajorId"/>
+							</li>
+
+							<li>
+								其他作者名字：<input type="text" name="authorNameOther"/>
+							</li>
+
+							<li>
+								期刊名字：<input type="text" name="journalName"/>
+							</li>
+
+							<li>
+								刊号：<input type="text" name="journalNumber"/>
+							</li>
+
+							<li>
+								期刊检索号：<input type="text" name="journalSearchNumber"/>
+							</li>
+
+							<li>
+								出版时间：<input type="text" name="publishDate"/>
+							</li>
+
+							<li>
+								卷号：<input type="text" name="reelNumber"/>
+							</li>
+
+							<li>
+								起始页码：<input type="text" name="pageStart"/>
+							</li>
+
+							<li>
+								终止页码：<input type="text" name="pageEnd"/>
+							</li>
+
+							<li>
+								基金：<input type="text" name="funds"/>
+							</li>
+
+							<li>
+								校内认定级别：<input type="text" name="levelIdCcec"/>
+							</li>
+
+							<li>
+								附件：<input type="text" name="attachFile"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="notes"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:docManagePaper:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:docManagePaper:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:docManagePaper:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:docManagePaper:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:docManagePaper:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:docManagePaper:remove')}]];
+        var prefix = ctx + "system/docManagePaper";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "作证-论文",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'paperId', 
+					title : '论文Id',
+					visible: false
+				},
+				{
+					field : 'paperKind', 
+					title : '论文类别',
+					sortable: true
+				},
+				{
+					field : 'paperTitle', 
+					title : '论文题目',
+					sortable: true
+				},
+				{
+					field : 'author1Id', 
+					title : '作者id-备用',
+					sortable: true
+				},
+				{
+					field : 'author1Name', 
+					title : '一作名字',
+					sortable: true
+				},
+				{
+					field : 'author1MajorId', 
+					title : '一作专业',
+					sortable: true
+				},
+				{
+					field : 'author2Name', 
+					title : '二作名字',
+					sortable: true
+				},
+				{
+					field : 'author2MajorId', 
+					title : '二作专业',
+					sortable: true
+				},
+				{
+					field : 'authorNameOther', 
+					title : '其他作者名字',
+					sortable: true
+				},
+				{
+					field : 'journalName', 
+					title : '期刊名字',
+					sortable: true
+				},
+				{
+					field : 'journalNumber', 
+					title : '刊号',
+					sortable: true
+				},
+				{
+					field : 'journalSearchNumber', 
+					title : '期刊检索号',
+					sortable: true
+				},
+				{
+					field : 'publishDate', 
+					title : '出版时间',
+					sortable: true
+				},
+				{
+					field : 'reelNumber', 
+					title : '卷号',
+					sortable: true
+				},
+				{
+					field : 'pageStart', 
+					title : '起始页码',
+					sortable: true
+				},
+				{
+					field : 'pageEnd', 
+					title : '终止页码',
+					sortable: true
+				},
+				{
+					field : 'funds', 
+					title : '基金',
+					sortable: true
+				},
+				{
+					field : 'levelIdCcec', 
+					title : '校内认定级别',
+					sortable: true
+				},
+				{
+					field : 'attachFile', 
+					title : '附件',
+					sortable: true
+				},
+				{
+					field : 'notes', 
+					title : '备注',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.paperId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.paperId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

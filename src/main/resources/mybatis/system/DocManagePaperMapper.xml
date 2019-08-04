@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.docManagePaper.mapper.DocManagePaperMapper">
+    
+    <resultMap type="DocManagePaper" id="DocManagePaperResult">
+        <result property="paperId"    column="paper_id"    />
+        <result property="paperKind"    column="paper_kind"    />
+        <result property="paperTitle"    column="paper_title"    />
+        <result property="author1Id"    column="author1_id"    />
+        <result property="author1Name"    column="author1_name"    />
+        <result property="author1MajorId"    column="author1_major_id"    />
+        <result property="author2Name"    column="author2_name"    />
+        <result property="author2MajorId"    column="author2_major_id"    />
+        <result property="authorNameOther"    column="author_name_other"    />
+        <result property="journalName"    column="journal_name"    />
+        <result property="journalNumber"    column="journal_number"    />
+        <result property="journalSearchNumber"    column="journal_search_number"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="reelNumber"    column="reel_number"    />
+        <result property="pageStart"    column="page_start"    />
+        <result property="pageEnd"    column="page_end"    />
+        <result property="funds"    column="funds"    />
+        <result property="levelIdCcec"    column="level_id_ccec"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+    </resultMap>
+	
+	<sql id="selectDocManagePaperVo">
+        select paper_id, paper_kind, paper_title, author1_id, author1_name, author1_major_id, author2_name, author2_major_id, author_name_other, journal_name, journal_number, journal_search_number, publish_date, reel_number, page_start, page_end, funds, level_id_ccec, attach_file, notes from doc_manage_paper
+    </sql>
+	
+    <select id="selectDocManagePaperList" parameterType="DocManagePaper" resultMap="DocManagePaperResult">
+        <include refid="selectDocManagePaperVo"/>
+        <where>  
+            <if test="paperId != null "> and paper_id = #{paperId}</if>
+             <if test="paperKind != null "> and paper_kind = #{paperKind}</if>
+             <if test="paperTitle != null  and paperTitle != '' "> and paper_title = #{paperTitle}</if>
+             <if test="author1Id != null "> and author1_id = #{author1Id}</if>
+             <if test="author1Name != null  and author1Name != '' "> and author1_name = #{author1Name}</if>
+             <if test="author1MajorId != null "> and author1_major_id = #{author1MajorId}</if>
+             <if test="author2Name != null  and author2Name != '' "> and author2_name = #{author2Name}</if>
+             <if test="author2MajorId != null "> and author2_major_id = #{author2MajorId}</if>
+             <if test="authorNameOther != null  and authorNameOther != '' "> and author_name_other = #{authorNameOther}</if>
+             <if test="journalName != null  and journalName != '' "> and journal_name = #{journalName}</if>
+             <if test="journalNumber != null  and journalNumber != '' "> and journal_number = #{journalNumber}</if>
+             <if test="journalSearchNumber != null  and journalSearchNumber != '' "> and journal_search_number = #{journalSearchNumber}</if>
+             <!--<if test="publishDate != null "> and publish_date = #{publishDate}</if>-->
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(publish_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(publish_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+             <if test="reelNumber != null  and reelNumber != '' "> and reel_number = #{reelNumber}</if>
+             <if test="pageStart != null "> and page_start = #{pageStart}</if>
+             <if test="pageEnd != null "> and page_end = #{pageEnd}</if>
+             <if test="funds != null  and funds != '' "> and funds = #{funds}</if>
+             <if test="levelIdCcec != null "> and level_id_ccec = #{levelIdCcec}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+             <if test="notes != null  and notes != '' "> and notes = #{notes}</if>
+         </where>
+    </select>
+    
+    <select id="selectDocManagePaperById" parameterType="Integer" resultMap="DocManagePaperResult">
+        <include refid="selectDocManagePaperVo"/>
+        where paper_id = #{paperId}
+    </select>
+        
+    <insert id="insertDocManagePaper" parameterType="DocManagePaper" useGeneratedKeys="true" keyProperty="paperId">
+        insert into doc_manage_paper
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="paperKind != null  ">paper_kind,</if>
+			<if test="paperTitle != null  and paperTitle != ''  ">paper_title,</if>
+			<if test="author1Id != null  ">author1_id,</if>
+			<if test="author1Name != null  and author1Name != ''  ">author1_name,</if>
+			<if test="author1MajorId != null  ">author1_major_id,</if>
+			<if test="author2Name != null  and author2Name != ''  ">author2_name,</if>
+			<if test="author2MajorId != null  ">author2_major_id,</if>
+			<if test="authorNameOther != null  and authorNameOther != ''  ">author_name_other,</if>
+			<if test="journalName != null  and journalName != ''  ">journal_name,</if>
+			<if test="journalNumber != null  and journalNumber != ''  ">journal_number,</if>
+			<if test="journalSearchNumber != null  and journalSearchNumber != ''  ">journal_search_number,</if>
+			<if test="publishDate != null  ">publish_date,</if>
+			<if test="reelNumber != null  and reelNumber != ''  ">reel_number,</if>
+			<if test="pageStart != null  ">page_start,</if>
+			<if test="pageEnd != null  ">page_end,</if>
+			<if test="funds != null  and funds != ''  ">funds,</if>
+			<if test="levelIdCcec != null  ">level_id_ccec,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+			<if test="notes != null  and notes != ''  ">notes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="paperKind != null  ">#{paperKind},</if>
+			<if test="paperTitle != null  and paperTitle != ''  ">#{paperTitle},</if>
+			<if test="author1Id != null  ">#{author1Id},</if>
+			<if test="author1Name != null  and author1Name != ''  ">#{author1Name},</if>
+			<if test="author1MajorId != null  ">#{author1MajorId},</if>
+			<if test="author2Name != null  and author2Name != ''  ">#{author2Name},</if>
+			<if test="author2MajorId != null  ">#{author2MajorId},</if>
+			<if test="authorNameOther != null  and authorNameOther != ''  ">#{authorNameOther},</if>
+			<if test="journalName != null  and journalName != ''  ">#{journalName},</if>
+			<if test="journalNumber != null  and journalNumber != ''  ">#{journalNumber},</if>
+			<if test="journalSearchNumber != null  and journalSearchNumber != ''  ">#{journalSearchNumber},</if>
+			<if test="publishDate != null  ">#{publishDate},</if>
+			<if test="reelNumber != null  and reelNumber != ''  ">#{reelNumber},</if>
+			<if test="pageStart != null  ">#{pageStart},</if>
+			<if test="pageEnd != null  ">#{pageEnd},</if>
+			<if test="funds != null  and funds != ''  ">#{funds},</if>
+			<if test="levelIdCcec != null  ">#{levelIdCcec},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+			<if test="notes != null  and notes != ''  ">#{notes},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDocManagePaper" parameterType="DocManagePaper">
+        update doc_manage_paper
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paperKind != null  ">paper_kind = #{paperKind},</if>
+            <if test="paperTitle != null  and paperTitle != ''  ">paper_title = #{paperTitle},</if>
+            <if test="author1Id != null  ">author1_id = #{author1Id},</if>
+            <if test="author1Name != null  and author1Name != ''  ">author1_name = #{author1Name},</if>
+            <if test="author1MajorId != null  ">author1_major_id = #{author1MajorId},</if>
+            <if test="author2Name != null  and author2Name != ''  ">author2_name = #{author2Name},</if>
+            <if test="author2MajorId != null  ">author2_major_id = #{author2MajorId},</if>
+            <if test="authorNameOther != null  and authorNameOther != ''  ">author_name_other = #{authorNameOther},</if>
+            <if test="journalName != null  and journalName != ''  ">journal_name = #{journalName},</if>
+            <if test="journalNumber != null  and journalNumber != ''  ">journal_number = #{journalNumber},</if>
+            <if test="journalSearchNumber != null  and journalSearchNumber != ''  ">journal_search_number = #{journalSearchNumber},</if>
+            <if test="publishDate != null  ">publish_date = #{publishDate},</if>
+            <if test="reelNumber != null  and reelNumber != ''  ">reel_number = #{reelNumber},</if>
+            <if test="pageStart != null  ">page_start = #{pageStart},</if>
+            <if test="pageEnd != null  ">page_end = #{pageEnd},</if>
+            <if test="funds != null  and funds != ''  ">funds = #{funds},</if>
+            <if test="levelIdCcec != null  ">level_id_ccec = #{levelIdCcec},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+            <if test="notes != null  and notes != ''  ">notes = #{notes},</if>
+        </trim>
+        where paper_id = #{paperId}
+    </update>
+
+	<delete id="deleteDocManagePaperById" parameterType="Integer">
+        delete from doc_manage_paper where paper_id = #{paperId}
+    </delete>
+	
+    <delete id="deleteDocManagePaperByIds" parameterType="String">
+        delete from doc_manage_paper where paper_id in 
+        <foreach item="paperId" collection="array" open="(" separator="," close=")">
+            #{paperId}
+        </foreach>
+    </delete>
+    
+</mapper>
