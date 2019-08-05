@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改教材/出版物')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-publication-edit" th:object="${publication}">
+            <input id="pbId" name="pbId" th:field="*{pbId}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">类别：</label>
+				<div class="col-sm-8">
+					<input id="pbKind" name="pbKind" th:field="*{pbKind}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">题目：</label>
+				<div class="col-sm-8">
+					<input id="pbTitle" name="pbTitle" th:field="*{pbTitle}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者编号：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" th:field="*{author1Id}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者姓名：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" th:field="*{author1Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者所在专业：</label>
+				<div class="col-sm-8">
+					<input id="author1MajorId" name="author1MajorId" th:field="*{author1MajorId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者编号：</label>
+				<div class="col-sm-8">
+					<input id="author2Id" name="author2Id" th:field="*{author2Id}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者姓名：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" th:field="*{author2Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者所在专业：</label>
+				<div class="col-sm-8">
+					<input id="author2MajorId" name="author2MajorId" th:field="*{author2MajorId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" th:field="*{authorNameOther}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">期刊名字：</label>
+				<div class="col-sm-8">
+					<input id="publisherName" name="publisherName" th:field="*{publisherName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">刊号：</label>
+				<div class="col-sm-8">
+					<input id="publishNumber" name="publishNumber" th:field="*{publishNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">出版社级别：</label>
+				<div class="col-sm-8">
+					<input id="publisherLevel" name="publisherLevel" th:field="*{publisherLevel}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">出版时间：</label>
+				<div class="col-sm-8">
+					<input id="publishDate" name="publishDate" th:field="*{publishDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">ISSN编号：</label>
+				<div class="col-sm-8">
+					<input id="issnNumber" name="issnNumber" th:field="*{issnNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">附件：</label>
+				<div class="col-sm-8">
+					<input id="attachFile" name="attachFile" th:field="*{attachFile}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" th:field="*{notes}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/publication";
+		$("#form-publication-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-publication-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
