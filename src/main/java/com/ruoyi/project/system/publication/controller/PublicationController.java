@@ -162,5 +162,12 @@ public class PublicationController extends BaseController
 		return toAjax(publicationService.deletePublicationByIds(ids));
 	}
 
-
+	/**
+	 * 修改教材/出版物
+	 */
+	@GetMapping("/pdfViewer")
+	public String viewPdf()
+	{
+		return prefix + "/pdfViewer";
+	}
 }
