@@ -175,8 +175,7 @@
 						 title : '附件',
 						 formatter: function(value, row, index) {
 							 var actions = [];
-							 // actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick=" "><i class="fa fa-eye"></i>预览</a> ');
-							 actions.push('<a class="btn btn-success btn-xs" onclick="openPdfViewerModel()"><i class="fa fa-file-pdf-o"></i> 预览</a> ');
+							 actions.push('<a class="btn btn-success btn-xs" onclick="$.operate.pdfPreview()"><i class="fa fa-file-pdf-o"></i> 预览</a> ');
 							 actions.push('<a class="btn btn-primary btn-xs" href="javascript:void(0)" onclick=""><i class="fa fa-download"></i> 下载</a> ');
 							 return actions.join('');
 						 }
@@ -194,9 +193,6 @@
 			 };
 			 $.table.init(options);
 		 });
-		 function openPdfViewerModel() {
-			 $.modal.open("PDF文件预览", prefix + "/pdfViewer",800,600);
-		 }
 	 </script>
 </body>
 </html>

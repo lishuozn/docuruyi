@@ -13,13 +13,16 @@ import com.ruoyi.project.system.publication.service.IPublicationService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 教材/出版物信息操作处理
@@ -162,12 +165,4 @@ public class PublicationController extends BaseController
 		return toAjax(publicationService.deletePublicationByIds(ids));
 	}
 
-	/**
-	 * 修改教材/出版物
-	 */
-	@GetMapping("/pdfViewer")
-	public String viewPdf()
-	{
-		return prefix + "/pdfViewer";
-	}
 }

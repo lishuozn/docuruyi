@@ -863,6 +863,22 @@
             	}
                 return url;
             },
+			/**
+			 * @author：yelihu
+			 * 功能：封装的预览pdf文件方法
+			 * 2019年08月06日22:32:50
+			 */
+			pdfPreview: function() {
+
+        		url = "/pdf/compressed.tracemonkey-pldi-09.pdf";
+
+        		//Your ajax
+
+        		if($.common.isNotEmpty(url)){
+					$.modal.open("文件预览", ctx + "system/pdf/pdfViewer?file="+url,900,540);
+				}
+
+			},
             // 保存信息 刷新表格
             save: function(url, data, callback) {
             	var config = {
