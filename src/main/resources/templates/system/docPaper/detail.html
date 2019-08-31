@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('论文详细')" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-user-edit">
+            <input name="author1MajorId" type="hidden" id="treeId" th:value="${docPaper.paperId}" />
+			<div class="form-group">
+				<label class="col-sm-3 control-label">论文类别：</label>
+				<div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_type', docPaper.paperKind)}"></div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">论文题目：</label>
+				<div class="col-sm-8">
+				    <div class="form-control-static" th:text="${docPaper.paperTitle}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">作者id-备用：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.author1Id}"></div>
+                </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">一作名字：</label>
+				<div class="col-sm-8">
+				    <div class="form-control-static" th:text="${docPaper.author1Name}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">一作专业：</label>
+				<div class="col-sm-8">
+				    <div class="form-control-static" th:text="${docPaper.author1MajorId}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">二作名字：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.author2Name}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">二作专业：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.author2MajorId}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">其它作者名字：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.authorNameOther}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">期刊名字：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.author2Name}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">刊号名字：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.journalName}"></div>
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">刊号：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.journalNumber}"></div>
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">期刊检索号：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.journalSearchNumber}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">出版时间：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.publishDate}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">卷号：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.reelNumber}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">起始页码：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.pageStart}"></div>
+				</div>
+			</div>,
+			<div class="form-group">
+				<label class="col-sm-3 control-label">终止页码：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.pageEnd}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">基金：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.funds}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">校内认定级别：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_level', docPaper.levelIdCcec)}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">附件：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.attachFile}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.notes}"></div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script type="text/javascript">
+		var prefix = ctx + "demo/operate";
+		
+		$("#form-user-add").validate({
+			onkeyup: false,
+			rules:{
+				userPhone:{
+					isPhone:true
+				},
+				userEmail:{
+					email:true
+				},
+			},
+		    focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	        	$.operate.save(prefix + "/edit", $('#form-user-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
