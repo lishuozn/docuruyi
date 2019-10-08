@@ -2,6 +2,8 @@ package com.ruoyi.common.utils.file;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
@@ -118,19 +120,28 @@ public class FileUploadUtils
 
     /**
      * 编码文件名
+     * DateUtils.datePath() + "/" 打印出来是这样的2019/08/30/
+     * 对DateUtils.datePath() 做修改
      */
     public static final String extractFilename(MultipartFile file)
     {
         String filename = file.getOriginalFilename();
         String extension = getExtension(file);
-        filename = DateUtils.datePath() + "/" + encodingFilename(filename) + "." + extension;
+//        filename = DateUtils.datePath() + "/" + encodingFilename(filename) + "." + extension;
+        filename = "docPaper" + "/" + encodingFilename(filename) + "." + extension;
         return filename;
     }
 
+    /**
+     *
+     * @param uploadDir
+     * @param filename
+     * @return
+     * @throws IOException
+     */
     private static final File getAbsoluteFile(String uploadDir, String filename) throws IOException
     {
         File desc = new File(uploadDir + File.separator + filename);
-
         if (!desc.getParentFile().exists())
         {
             desc.getParentFile().mkdirs();

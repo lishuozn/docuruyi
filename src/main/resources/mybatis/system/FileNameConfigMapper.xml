@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.fileNameConfig.mapper.FileNameConfigMapper">
+    
+    <resultMap type="FileNameConfig" id="FileNameConfigResult">
+        <result property="fileNameId"    column="file_name_id"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="nameRule"    column="name_rule"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectFileNameConfigVo">
+        select file_name_id, file_type, name_rule, remark from sys_file_name_config
+    </sql>
+	
+    <select id="selectFileNameConfigList" parameterType="FileNameConfig" resultMap="FileNameConfigResult">
+        <include refid="selectFileNameConfigVo"/>
+        <where>  
+            <if test="fileNameId != null "> and file_name_id = #{fileNameId}</if>
+             <if test="fileType != null  and fileType != '' "> and file_type = #{fileType}</if>
+             <if test="nameRule != null  and nameRule != '' "> and name_rule = #{nameRule}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectFileNameConfigById" parameterType="Integer" resultMap="FileNameConfigResult">
+        <include refid="selectFileNameConfigVo"/>
+        where file_name_id = #{fileNameId}
+    </select>
+        
+    <insert id="insertFileNameConfig" parameterType="FileNameConfig" useGeneratedKeys="true" keyProperty="fileNameId">
+        insert into sys_file_name_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fileType != null  and fileType != ''  ">file_type,</if>
+			<if test="nameRule != null  and nameRule != ''  ">name_rule,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fileType != null  and fileType != ''  ">#{fileType},</if>
+			<if test="nameRule != null  and nameRule != ''  ">#{nameRule},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateFileNameConfig" parameterType="FileNameConfig">
+        update sys_file_name_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileType != null  and fileType != ''  ">file_type = #{fileType},</if>
+            <if test="nameRule != null  and nameRule != ''  ">name_rule = #{nameRule},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where file_name_id = #{fileNameId}
+    </update>
+
+	<delete id="deleteFileNameConfigById" parameterType="Integer">
+        delete from sys_file_name_config where file_name_id = #{fileNameId}
+    </delete>
+	
+    <delete id="deleteFileNameConfigByIds" parameterType="String">
+        delete from sys_file_name_config where file_name_id in 
+        <foreach item="fileNameId" collection="array" open="(" separator="," close=")">
+            #{fileNameId}
+        </foreach>
+    </delete>
+    
+</mapper>

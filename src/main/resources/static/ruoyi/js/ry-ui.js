@@ -334,12 +334,19 @@
             // 查询表格指定列值
             selectColumns: function(column) {
             	var rows = $.map($.btTable.bootstrapTable('getSelections'), function (row) {
+            		// alert(row[column]);
         	        return row[column];
         	    });
             	if ($.common.isNotEmpty($.table._option.rememberSelected) && $.table._option.rememberSelected) {
             		rows = rows.concat(selectionIds);
             	}
             	return $.common.uniqueFn(rows);
+            },
+            //获取选中行的index索引号
+            getIdSelections: function() {
+                return $.map($.btTable.bootstrapTable('getSelections'), function (row,index) {
+                    return index;
+                });
             },
             // 获取当前页选中或者取消的行ID
             affectedRowIds: function(rows) {
@@ -862,6 +869,66 @@
             	    url = $.table._option.updateUrl.replace("{id}", id);
             	}
                 return url;
+            },
+            /**
+             * @author：yelihu
+             * 功能：封装的预览pdf文件方法
+             * 2019年08月06日22:32:50
+             */
+            // pdfPreview: function(pbId) {
+            //     var fileName="";
+            //     $.ajax({
+            //         type: "get",
+            //         url: ctx + "system/publication"+"/publication?pbId="+pbId,
+            //         cache: false,
+            //         contentType: false,
+            //         processData: false,
+            //         dataType: 'json',
+            //         success: function(result) {
+            //             if (result.code == web_status.SUCCESS) {
+            //                 fileName += result.data;
+            //                 url ='/profile/upload/'+fileName;
+            //                 if($.common.isNotEmpty(url)){
+            //                     $.modal.open("文件预览", ctx + "system/pdf/pdfViewer?file="+url,800,600);
+            //                 }
+            //             } else {
+            //                 $.modal.alertError(result.msg);
+            //             }
+            //         },
+            //         error: function(error) {
+            //             $.modal.alertWarning("文档加载失败。");
+            //         }
+            //     });
+            // },
+            /**
+             * @author：lishengqi
+             * 功能：封装的预览pdf文件方法
+             * 2019年08月06日22:32:50
+             */
+            pdfPreview: function(pbId) {
+                var fileName="";
+                $.ajax({
+                    type: "get",
+                    url: ctx + "system/docPaper"+"/docPaper?pbId="+pbId,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.code == web_status.SUCCESS) {
+                            fileName += result.data;
+                            url ='/profile/upload/'+fileName;
+                            if($.common.isNotEmpty(url)){
+                                $.modal.open("文件预览", ctx + "system/pdf/pdfViewer?file="+url,800,600);
+                            }
+                        } else {
+                            $.modal.alertError(result.msg);
+                        }
+                    },
+                    error: function(error) {
+                        $.modal.alertWarning("文档加载失败。");
+                    }
+                });
             },
             // 保存信息 刷新表格
             save: function(url, data, callback) {

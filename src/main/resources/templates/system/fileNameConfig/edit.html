@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改文件命名配置')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-fileNameConfig-edit" th:object="${fileNameConfig}">
+            <input id="fileNameId" name="fileNameId" th:field="*{fileNameId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">文件类型：</label>
+				<div class="col-sm-8">
+					<input id="fileType" name="fileType" th:field="*{fileType}" class="form-control" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">命名规则：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="nameRule" name="nameRule" th:field="*{nameRule}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<hr/>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">命名规则：</label>
+				<div class="col-sm-8">
+					<input id="nameRule" name="nameRule" style="visibility: hidden;" th:field="*{nameRule}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">1：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper1" id="paper1" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">2：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper2" id="paper2" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">3：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper3" id="paper3" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">4：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper4" id="paper4" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<hr/>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript" th:inline="javascript">
+		var prefix = ctx + "system/fileNameConfig";
+		$("#form-fileNameConfig-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+            var updateNameRule =
+                $("#paper1").val()+ "+" +
+                $("#paper2").val()+ "+" +
+                $("#paper3").val()+ "+" +
+                $("#paper4").val();
+            $("#nameRule").val(updateNameRule);
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-fileNameConfig-edit').serialize());
+	        }
+	    }
+	    //把命名规则解析出来
+	    var namerule = $("#nameRule").val();
+        var strs= new Array();
+        strs = namerule.split("+");
+        $("#paper1 ").get(0).selectedIndex=strs[0];
+        $("#paper2 ").get(0).selectedIndex=strs[1];
+        $("#paper3 ").get(0).selectedIndex=strs[2];
+        $("#paper4 ").get(0).selectedIndex=strs[3];
+        $("#paper5 ").get(0).selectedIndex=strs[4];
+        $("#paper6 ").get(0).selectedIndex=strs[5];
+        $("#paper7 ").get(0).selectedIndex=strs[6];
+        $("#paper8 ").get(0).selectedIndex=strs[7];
+        $("#paper9 ").get(0).selectedIndex=strs[8];
+        $("#paper10 ").get(0).selectedIndex=strs[9];
+        $("#paper11 ").get(0).selectedIndex=strs[10];
+        $("#paper12 ").get(0).selectedIndex=strs[11];
+        $("#paper13 ").get(0).selectedIndex=strs[12];
+        $("#paper14 ").get(0).selectedIndex=strs[13];
+        $("#paper15 ").get(0).selectedIndex=strs[14];
+        $("#paper16 ").get(0).selectedIndex=strs[15];
+        $("#paper17 ").get(0).selectedIndex=strs[16];
+        $("#paper18 ").get(0).selectedIndex=strs[17];
+	</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增文件命名配置')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-fileNameConfig-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">文件类型：</label>
+				<div class="col-sm-8">
+					<input id="fileType" name="fileType" class="form-control" type="text">
+				</div>
+			</div>
+			<!--<label class="col-sm-3 control-label" >选择命名规则：</label>-->
+			<hr/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">命名规则：</label>
+				<div class="col-sm-8">
+					<input id="nameRule" name="nameRule" placeholder="例如:	论文类别+一作专业+二作名字+出版日期" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">1：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper1" id="paper1" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">空</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">2：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper2" id="paper2" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">3：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper3" id="paper3" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">4：</label>
+				<div class="col-sm-8">
+					<!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paper4" id="paper4" th:with="type=${@dict.getType('doc_manage_paper')}">
+						<option value="">默认</option>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<hr/>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/fileNameConfig"
+		$("#form-fileNameConfig-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+		    var updateNameRule =
+            	$("#paper1").val()+ "+" +
+                $("#paper2").val()+ "+" +
+                $("#paper3").val()+ "+" +
+                $("#paper4").val();
+		    $("#nameRule").val(updateNameRule);
+            // alert($("#nameRule").val());
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-fileNameConfig-add').serialize());
+                // paperNameConfig();
+	        }
+	    }
+	</script>
+</body>
+</html>

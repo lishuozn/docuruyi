@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
 	<th:block th:include="include :: header('论文详细')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
 </head>
 <body class="white-bg">
 	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -9,7 +10,8 @@
             <input name="author1MajorId" type="hidden" id="treeId" th:value="${docPaper.paperId}" />
 			<div class="form-group">
 				<label class="col-sm-3 control-label">论文类别：</label>
-				<div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_type', docPaper.paperKind)}"></div>
+				<!--<div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_type', docPaper.paperKind)}"></div>-->
+				<div class="form-control-static" th:text="${docPaper.paperKind}"></div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label ">论文题目：</label>
@@ -53,6 +55,18 @@
                     <div class="form-control-static" th:text="${docPaper.authorNameOther}"></div>
 				</div>
 			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">第一单位：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.firstUnit}"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">第二单位：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${docPaper.secondUnit}"></div>
+                </div>
+            </div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">期刊名字：</label>
 				<div class="col-sm-8">
@@ -80,7 +94,9 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">出版时间：</label>
 				<div class="col-sm-8">
-                    <div class="form-control-static" th:text="${docPaper.publishDate}"></div>
+                    <!--<div class="form-control-static" th:text="${docPaper.publishDate}"></div>-->
+                    <div class="form-control-static" th:text="${#dates.format(docPaper.publishDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+
 				</div>
 			</div>
 			<div class="form-group">
@@ -110,13 +126,29 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">校内认定级别：</label>
 				<div class="col-sm-8">
-                    <div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_level', docPaper.levelIdCcec)}"></div>
+                    <!--<div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_level', docPaper.levelIdCcec)}"></div>-->
+                    <div class="form-control-static" th:text="${docPaper.levelIdCcec}"></div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">附件：</label>
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
 				<div class="col-sm-8">
-                    <div class="form-control-static" th:text="${docPaper.attachFile}"></div>
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="attachFile"  name="attachFile" class="form-control" type="file" multiple>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -129,7 +161,8 @@
 		</form>
 	</div>
 	<th:block th:include="include :: footer" />
-	<script type="text/javascript">
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <script th:inline="javascript" type="text/javascript">
 		var prefix = ctx + "demo/operate";
 		
 		$("#form-user-add").validate({
@@ -150,6 +183,33 @@
 	        	$.operate.save(prefix + "/edit", $('#form-user-edit').serialize());
 	        }
 	    }
+        var filename = [[${docPaper.attachFile}]];
+        $(document).ready(function () {
+            $('#attachFile').fileinput({
+                uploadUrl: "#",
+                deleteUrl: prefix+"/removeFile",
+                deleteExtraData:{
+                    pbId:[[${docPaper.paperId}]],
+                    fileUrl:"upload/"+filename,
+                },
+                maxFileCount: 1,
+                showUpload:false,
+                layoutTemplates:{
+                    actionUpload: '',
+                },
+                pdfRendererUrl: 'https://plugins.krajee.com/pdfjs/web/viewer.html',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    "/profile/upload/"+filename,
+                ],
+                initialPreviewConfig: [
+                    {type: 'pdf', size: 307200}
+                ]
+
+            });
+        });
 	</script>
+
 </body>
 </html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增论文')" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-docPaper-add">
+            <input name="author1MajorId" type="hidden" id="treeId"/>
+            <input name="author2MajorId" type="hidden" id="treeId1"/>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>论文类别：</label>
+				<div class="col-sm-8">
+                    <!--<input id="paperKind" name="paperKind" class="form-control" type="text">-->
+					<select name="paperKind" id="paperKind" class="form-control" th:with="type=${@dict.getType('doc_manage_paper_type')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>论文题目：</label>
+				<div class="col-sm-8">
+					<input id="paperTitle" name="paperTitle" class="form-control" required type="text">
+				</div>
+			</div>
+			<!--一隐藏此div-->
+			<div class="form-group" style="display: none">
+				<label class="col-sm-3 control-label">作者id-备用：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>一作名字：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>一作专业：</label>
+				<div class="col-sm-8">
+                    <!--<input id="author1MajorId" name="author1MajorId" class="form-control" type="text">-->
+                    <div class="input-group">
+                        <input name="author1MajorName"  id="treeName" type="text" placeholder="请选择专业" class="form-control authorMajor" required>
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作名字：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作专业：</label>
+                <div class="col-sm-8">
+                    <!--<input id="author2MajorId" name="author2MajorId" class="form-control" type="text">-->
+                    <div class="input-group">
+                        <input name="author2MajorName" id="treeNameAuthor2"  type="text" placeholder="请选择专业" class="form-control authorMajor2">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>第一单位：</label>
+				<div class="col-sm-8">
+					<input id="firstUnit" name="firstUnit" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第二单位：</label>
+				<div class="col-sm-8">
+					<input id="secondUnit" name="secondUnit" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>期刊名字：</label>
+				<div class="col-sm-8">
+					<input id="journalName" name="journalName" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>刊号：</label>
+				<div class="col-sm-8">
+					<input id="journalNumber" name="journalNumber" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>期刊检索号：</label>
+				<div class="col-sm-8">
+					<input id="journalSearchNumber" name="journalSearchNumber" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>出版时间：</label>
+				<div class="col-sm-8">
+					<!--<input id="publishDate" name="publishDate" class="form-control" type="text">-->
+                    <input type="text" style="height: 35px" class="time-input" id="publishDate" required name="publishDate" />
+                </div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>卷号：</label>
+				<div class="col-sm-8">
+					<input id="reelNumber" name="reelNumber" class="form-control" required type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>起始页码：</label>
+				<div class="col-sm-3">
+					<input id="pageStart" name="pageStart" class="form-control" required type="text">
+				</div>
+				<span>到</span>
+                <div class="col-sm-3">
+                    <input id="pageEnd" name="pageEnd" class="form-control" required type="text">
+                </div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">终止页码：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="pageEnd" name="pageEnd" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">基金：</label>
+				<div class="col-sm-8">
+					<input id="funds" name="funds" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>校内认定级别：</label>
+				<div class="col-sm-8">
+                    <!--<input id="levelIdCcec" name="levelIdCcec" class="form-control" type="text">-->
+                    <select name="levelIdCcec" id="levelIdCcec" class="form-control" th:with="type=${@dict.getType('doc_manage_paper_level')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>附件：</label>
+				<!--<div class="col-sm-8">-->
+					<!--<input id="attachFile" name="attachFile" class="form-control" type="text">-->
+				<!--</div>-->
+                <div class="col-sm-8">
+                    <div class="wrapper wrapper-content animated fadeInRight">
+                        <div class="row">
+							<div id="message"><label id="attachFile-error" class="error" for="attachFile"></label></div>
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <label class="font-noraml">多文件上传</label>
+                                        <div class="file-loading">
+											<input id="attachFile"  name="attachFile" type="file" class="form-control error" multiple  required aria-required="true">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+		var prefix = ctx + "system/docPaper"
+		$("#form-docPaper-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            // $.operate.save(prefix + "/add", $('#form-docPaper-add').serialize());
+                uploadFile();
+	        }
+	    }
+
+        //上传文件
+        function uploadFile() {
+            var formData = new FormData();
+            if ($('#attachFile')[0].files[0] == null) {
+                $.modal.alertWarning("请先选择文件路径");
+                return false;
+            }
+            formData.append('paperKind', $("#paperKind").val());
+            formData.append('paperTitle', $("#paperTitle").val());
+            formData.append('author1Id', $("#author1Id").val());
+            formData.append('author1Name', $("#author1Name").val());
+            formData.append('author1MajorId', $("#treeId").val());
+            formData.append('author2Name', $("#author2Name").val());
+            formData.append('author2MajorId', $("#treeId1").val());
+            formData.append('authorNameOther', $("#authorNameOther").val());
+            formData.append('firstUnit', $("#firstUnit").val());
+            formData.append('secondUnit', $("#secondUnit").val());
+            formData.append('journalName', $("#journalName").val());
+            formData.append('journalNumber', $("#journalNumber").val());
+            formData.append('journalSearchNumber', $("#journalSearchNumber").val());
+            formData.append('publishDate', $("#publishDate").val());
+            formData.append('reelNumber', $("#reelNumber").val());
+            formData.append('pageStart', $("#pageStart").val());
+            formData.append('pageEnd', $("#pageEnd").val());
+            formData.append('funds', $("#funds").val());
+            formData.append('levelIdCcec', $("#levelIdCcec").val());
+            formData.append('file', $('#attachFile')[0].files[0]);
+            $.ajax({
+                url: prefix + "/add",
+                type: 'post',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function(result) {
+                    $.operate.successCallback(result);
+                }
+            });
+        }
+        /*用户管理-新增-选择专业树*/
+        /*function selectDeptTree() {
+            var treeId = $("#treeId").val();
+            var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + deptId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+
+        }*/
+        var currentTreeName = "";
+        $(".authorMajor").click(function () {
+            currentTreeName = $(this).attr("id");
+            var treeId = $("#treeId").val();
+            var author1MajorId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + author1MajorId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        });
+        var currentTreeName2 = "";
+        $(".authorMajor2").click(function () {
+            currentTreeName2 = $(this).attr("id");
+            var treeId1 = $("#treeId1").val();
+            var author2MajorId = $.common.isEmpty(treeId1) ? "100" : $("#treeId1").val();
+            var url = ctx + "system/dept/selectDeptTree/" + author2MajorId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit2
+            };
+            $.modal.openOptions(options);
+        });
+
+        function doSubmit2(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId1").val(body.find('#treeId').val());
+                $("#treeNameAuthor2").val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                // $("#"+currentTreeName).val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+
+        $(document).ready(function () {
+            $("#attachFile").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': '#',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                /*
+				initialPreview: [
+                    "/img/profile.jpg"
+                ]
+                */
+            });
+        });
+    </script>
+</body>
+</html>

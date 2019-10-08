@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.docManagePaper.mapper;
 
+import com.ruoyi.project.system.dept.domain.Dept;
 import com.ruoyi.project.system.docManagePaper.domain.DocManagePaper;
 import java.util.List;	
 
@@ -58,5 +59,8 @@ public interface DocManagePaperMapper
      * @return 结果
      */
 	public int deleteDocManagePaperByIds(String[] paperIds);
-	
+
+	public Dept selectMajor1(String author1_major_id);
+	public Dept selectMajor2(String author2_major_id);
+
 }

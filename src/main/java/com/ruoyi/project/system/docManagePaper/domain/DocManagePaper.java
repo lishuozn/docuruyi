@@ -56,7 +56,7 @@ public class DocManagePaper extends BaseEntity
 	/** 备注 */
 	private String notes;
 
-	public void setPaperId(Integer paperId) 
+	public void setPaperId(Integer paperId)
 	{
 		this.paperId = paperId;
 	}
