@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('修改科研课题')" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sciResSubject-edit" th:object="${sciResSubject}">
+            <input id="subjectId" name="subjectId" th:field="*{subjectId}"  type="hidden">
+            <input id="attachFile" type="hidden"  th:field="*{attachFile}" />
+            <input name="author1MajorId" type="hidden" id="treeId"/>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>课题名称：</label>
+				<div class="col-sm-8">
+					<input id="subjectName" name="subjectName" th:field="*{subjectName}" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>课题级别：</label>
+				<div class="col-sm-8">
+					<select id="subjectLevel" name="subjectLevel" class="form-control m-b" th:with="type=${@dict.getType('sys_res_topic_level')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{subjectLevel}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>主持人：</label>
+				<div class="col-sm-8">
+					<input id="moderator" name="moderator" th:field="*{moderator}" class="form-control" required type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label"><span style="color: red;">*</span>主持人专业：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="modMajorId" name="modMajorId" th:field="*{modMajorId}" class="form-control" type="text">-->
+					<!--<input id="modMajorId" name="modMajorId" th:field="*{sciResSubjectMajor.deptName}" class="form-control modMajorId" type="text">-->
+					<!--<input hidden id="modMajorId" name="modMajorId" type="text">-->
+					<!--<span class="input-group-addon"><i class="fa fa-search"></i></span>-->
+				<!--</div>-->
+			<!--</div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red;">*</span>主持人专业：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input name="modMajorId"  id="treeName" type="text" placeholder="请选择专业"
+                               th:field="*{sciResSubjectMajor.deptName}" class="form-control authorMajor" required>
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>主持人参与人：</label>
+				<div class="col-sm-8">
+					<input id="modParticipant" name="modParticipant" th:field="*{modParticipant}" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>第一单位：</label>
+				<div class="col-sm-8">
+					<input id="firstUnit" name="firstUnit" th:field="*{firstUnit}" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">合作单位：</label>
+				<div class="col-sm-8">
+					<input id="cooperUnit" name="cooperUnit" th:field="*{cooperUnit}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>立项时间：</label>
+				<div class="col-sm-8">
+					<input id="projectDate"  name="projectDate" th:value="*{#dates.format(projectDate, 'yyyy-MM-dd')}" class="form-control time-input" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>资助金额(万元)：</label>
+				<div class="col-sm-8">
+					<input id="grants" name="grants" th:field="*{grants}" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>到账金额(万元)：</label>
+				<div class="col-sm-8">
+					<input id="arrivalAmount" name="arrivalAmount" th:field="*{arrivalAmount}" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>结题时间：</label>
+				<div class="col-sm-8">
+					<input id="concludingDate"  name="concludingDate" th:value="*{#dates.format(concludingDate, 'yyyy-MM-dd')}" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>项目来源：</label>
+				<div class="col-sm-8">
+					<input id="projectSource" name="projectSource" th:field="*{projectSource}" class="form-control" required type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>是否结题：</label>
+				<div class="col-sm-8">
+					<select id="isFinished" name="isFinished" class="form-control m-b" th:with="type=${@dict.getType('sys_subject_is_finished')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{isFinished}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red;">*</span>是否按期结题：</label>
+				<div class="col-sm-8">
+					<select id="isFinishedOnTime" name="isFinishedOnTime" class="form-control m-b" th:with="type=${@dict.getType('sys_subject_is_finished_on_time')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{isFinishedOnTime}"></option>
+					</select>
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">附件预览：</label>
+                <div class="col-sm-8">
+                    <a class="btn btn-link btn-sm" shiro:hasPermission="system:sciResSubject:sciResSubject"
+                       th:onclick="'javascript:fileShow('+*{subjectId}+')' "><i class="fa fa-file-pdf-o"></i>预览文件</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+                <div class="col-sm-8">
+                    <button id="modifyBtn" class="btn btn-success btn-sm" type="button" onclick="showFileInput()">点击修改</button>
+                </div>
+            </div>
+            <div id="fileInput" class="form-group hidden">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-8">
+                    <div class="wrapper-content animated fadeInRight">
+                        <div class="row">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <label class="font-noraml">多文件上传</label>
+                                        <div class="file-loading">
+                                            <input id="file" name="file" class="form-control" type="file" multiple>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">附件：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="attachFile" name="attachFile" th:field="*{attachFile}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" th:field="*{notes}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+		var prefix = ctx + "system/sciResSubject";
+		$("#form-sciResSubject-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            // $.operate.save(prefix + "/edit", $('#form-sciResSubject-edit').serialize());
+                uploadFile();
+	        }
+	    }
+        //上传文件
+        function uploadFile() {
+            var formData = new FormData();
+            if (modified==true && $('#file')[0].files[0] == null) {
+                $.modal.alertWarning("请先选择文件路径");
+                return false;
+            }
+            formData.append('file', $('#file')[0].files[0]);
+
+            formData.append('subjectId', $("#subjectId").val());
+            formData.append('subjectName', $("#subjectName").val());
+            formData.append('subjectLevel', $("#subjectLevel").val());
+            formData.append('moderator', $("#moderator").val());
+            formData.append('modMajorId', $("#treeId").val());
+            formData.append('modParticipant', $("#modParticipant").val());
+            formData.append('firstUnit', $("#firstUnit").val());
+            formData.append('cooperUnit', $("#cooperUnit").val());
+            formData.append('projectDate', $("#projectDate").val());
+            formData.append('grants', $("#grants").val());
+            formData.append('arrivalAmount', $("#arrivalAmount").val());
+            formData.append('concludingDate', $("#concludingDate").val());
+            formData.append('projectSource', $("#projectSource").val());
+            formData.append('journalNumber', $("#journalNumber").val());
+            formData.append('isFinished', $("#isFinished").val());
+            formData.append('isFinishedOnTime', $("#isFinishedOnTime").val());
+            formData.append('notes', $("#notes").val());
+            formData.append('attachFile', $('#attachFile').val());
+            $.ajax({
+                url: prefix + "/edit",
+                type: 'post',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function(result) {
+                    $.operate.successCallback(result);
+                }
+            });
+        }
+        var modified = false;
+        //专业树开始
+        var currentTreeName = "";
+        $(".authorMajor").click(function () {
+            currentTreeName = $(this).attr("id");
+            var treeId = $("#treeId").val();
+            var modMajorId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + modMajorId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        });
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                // $("#"+currentTreeName).val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+        //专业树结束
+        //文件预览
+        function fileShow(subjectId){
+            var pathUrl= "system/sciResSubject/sciResSubject?pbId=";
+            $.operate.pdfPreview(pathUrl+subjectId);
+        }
+        //文件预览结束
+        //修改文件按钮控制
+        function showFileInput(){
+            if(modified){
+                modified = false;
+                $("#fileInput").addClass("hidden");
+                $("#modifyBtn").text("点击修改");
+            }else{
+                modified=true;
+                $("#fileInput").removeClass("hidden");
+                $("#modifyBtn").text("取消修改");
+            }
+        };
+        //修改文件按钮控制结束
+        //文件预览的代码
+        // var filename = [[${sciResSubject.attachFile}]];
+        // $(document).ready(function () {
+        //     $('#file').fileinput({
+        //         uploadUrl: "#",
+        //         maxFileCount: 1,
+        //         maxFileSize:50000,
+        //         showUpload:false,
+        //         layoutTemplates:{
+        //             actionUpload: '',
+        //         },
+        //         overwriteInitial: false,
+        //         initialPreviewAsData: true,
+        //     });
+        // });
+        $(document).ready(function () {
+            $("#file").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': '#',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                maxFileCount: 1,
+                maxFileSize:50000,
+                /*
+				initialPreview: [
+                    "/img/profile.jpg"
+                ]
+                */
+            });
+        });
+	</script>
+</body>
+</html>

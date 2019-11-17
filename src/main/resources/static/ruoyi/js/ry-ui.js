@@ -909,7 +909,7 @@
                 var fileName="";
                 $.ajax({
                     type: "get",
-                    url: ctx + "system/docPaper"+"/docPaper?pbId="+pbId,
+                    url: ctx + pbId,
                     cache: false,
                     contentType: false,
                     processData: false,

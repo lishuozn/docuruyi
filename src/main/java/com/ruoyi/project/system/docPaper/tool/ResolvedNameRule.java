@@ -2,7 +2,6 @@ package com.ruoyi.project.system.docPaper.tool;
 
 import com.ruoyi.project.system.docPaper.domain.DocPaperForFileNameConfig;
 import com.ruoyi.project.system.fileNameConfig.domain.FileNameConfig;
-import com.ruoyi.project.system.fileNameConfig.service.FileNameConfigServiceImpl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,10 +11,10 @@ public class ResolvedNameRule {
 
     /**
      * 获取论文解析后的文件地址和命名规范
-     * @param docPaperList
-     * @param compareFileNameList
-     * @param fileType
-     * @param configList
+     * @param docPaperList docPaper的所有数据
+     * @param compareFileNameList 要下载的所有数据库文件地址
+     * @param fileType 文件类型
+     * @param configList //数据库对于这个文件的命名规则数据
      * @return
      */
     public List<FileNameConfig> newNameAndOldFilePath(List<DocPaperForFileNameConfig> docPaperList, List<String> compareFileNameList, String fileType,
@@ -27,25 +26,24 @@ public class ResolvedNameRule {
 
     /**
      * 解析文件命名规范
-     * @param fileType
-     * @param docPaperList
-     * @param docPaperList
-     * @param compareFileNameList
-     * @param configList
+     * @param docPaperList docPaper的所有数据
+     * @param compareFileNameList 要下载的所有数据库文件地址
+     * @param fileType 文件类型
+     * @param configList //数据库对于这个文件的命名规则数据
      * @return
      */
     List<FileNameConfig> resolvedNamingRules(String fileType,List<DocPaperForFileNameConfig> docPaperList,List<String> compareFileNameList,
                                              List<FileNameConfig> configList){
-        String nameRule = "";
         List<FileNameConfig> fileNameConfigList = new ArrayList<>();
         if(fileType.equals("论文")) {
-            FileNameConfigServiceImpl fileNameConfigService = new FileNameConfigServiceImpl();
             List<Integer> intList = new ArrayList<>();
+            /**
+             * 把命名规则的数字全部分开存在intList里面
+             */
             for(int i=0;i<configList.size();i++) {
                 String[] as = configList.get(i).getNameRule().split("\\+");
                 for(int j=0;j<as.length;j++) {
                     if(as[j].equals("")) {
-
                     }else {
                         intList.add(Integer.parseInt(as[j]));
                     }
@@ -104,7 +102,7 @@ public class ResolvedNameRule {
                 fileNameConfigList.add(fileNameConfig);
                 newFileName = "";
             }//一层循环结束
-        }
+        }//if结束
         return fileNameConfigList;
     }
 

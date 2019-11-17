@@ -8,10 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.system.docPaper.domain.DocPaperForFileNameConfig;
+import com.ruoyi.project.system.docPaper.tool.DocPaperFileUploadUtil;
 import com.ruoyi.project.system.docPaper.tool.ResolvedNameRule;
 import com.ruoyi.project.system.docPaper.tool.ZipCompress;
 import com.ruoyi.project.system.fileNameConfig.domain.FileNameConfig;
@@ -184,7 +184,7 @@ public class DocPaperController extends BaseController
         String filePath = RuoYiConfig.getUploadPath();
 		System.out.println(filePath+"//filePath");
         // 上传并返回新文件名称
-        String fileName = FileUploadUtils.upload(filePath, file);
+        String fileName = DocPaperFileUploadUtil.upload(filePath, file,"docPaper");
 		System.out.println(fileName+"//fileName");
         docPaper.setAttachFile(fileName);
         return toAjax(docPaperService.insertDocPaper(docPaper));
@@ -296,7 +296,7 @@ public class DocPaperController extends BaseController
             // 上传并返回新文件名称
             String fileName = null;
             try {
-                fileName = FileUploadUtils.upload(filePath, file);
+                fileName = DocPaperFileUploadUtil.upload(filePath, file,"docPaper");
             } catch (IOException e) {
                 System.out.println("文件上传失败");
             }
@@ -340,7 +340,6 @@ public class DocPaperController extends BaseController
         public void downloadFile (@PathVariable("paperId") Integer paperId, HttpServletResponse response,
                 HttpServletRequest request) throws Exception
         {
-
             DocPaper docPaper = docPaperService.selectDocPaperById(paperId);
             String filePath = docPaper.getAttachFile();
             String realFileName = "paperName" + filePath.substring(filePath.indexOf("."));
@@ -358,8 +357,8 @@ public class DocPaperController extends BaseController
 
         /**
          * 论文批量下载
-         * @param attachFile
-         * @param column
+         * @param attachFile 要下载的文件名
+         * @param column 文件序号
          * @param response
          * @param request
          * @throws Exception
@@ -377,17 +376,26 @@ public class DocPaperController extends BaseController
             }
             List<String> listFilePaths = new ArrayList();
             List<String> compareFileNameList = new ArrayList<>();
+            //将文件名放到数组里面
             for (int i = 0; i < attachFiles.length; i++) {
                 listFilePaths.add(RuoYiConfig.getUploadPath() + attachFiles[i]);
                 compareFileNameList.add(attachFiles[i]);
-
             }
-            //解析命名规则
+            /**
+             * 解析命名规则
+             * fileNameConfigList里面每一项的数据样板
+             * fileNameId=<null>
+             *fileType=D:/profile/upload/docPaper/3829a141ce9c8726ca3936d4a57a22c6.pdf
+             *nameRule=教研论文+李+软件工程+2019-07-31+
+             */
             List<DocPaperForFileNameConfig> list = docPaperService.selectListForFileNameConfig();
             ResolvedNameRule resolvedNameRule = new ResolvedNameRule();
             List<FileNameConfig> fileNameConfigList = resolvedNameRule.newNameAndOldFilePath(list, compareFileNameList, "论文",
                     iFileNameConfigService.selectFileNameConfigList(new FileNameConfig("论文")));
-            //把文件进行压缩
+            /**
+             * 把文件进行压缩
+             * 其中ZipCompress类通用
+             */
             String zipFilename = "D:/profile/zipFile/tempFile.zip";
             ZipCompress zipCom = new ZipCompress(zipFilename, fileNameConfigList, colums);
             zipCom.zip();

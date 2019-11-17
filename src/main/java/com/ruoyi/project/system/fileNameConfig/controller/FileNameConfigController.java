@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.project.system.docPaper.tool.QueryInterfaceNameRules;
+import com.ruoyi.project.system.fileNameConfig.tool.NumChangeName;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,11 +60,12 @@ public class FileNameConfigController extends BaseController
         List<FileNameConfig> newList = new ArrayList<>();
         for(int i=0;i<list.size();i++) {
             FileNameConfig fileNameConfig1 = list.get(i);
-            String as = fileNameConfig1.getNameRule();
-            fileNameConfig1.setNameRule(QueryInterfaceNameRules.resolveNameByType("论文",as));
+//            String as = fileNameConfig1.getNameRule();
+//            fileNameConfig1.setNameRule(QueryInterfaceNameRules.resolveNameByType("论文",as));
+            fileNameConfig1.setNameRule(NumChangeName.anayleListPage(fileNameConfig1));
             newList.add(fileNameConfig1);
         }
-		return getDataTable(newList);
+		return getDataTable(list);
 	}
 	
 	
@@ -108,6 +110,7 @@ public class FileNameConfigController extends BaseController
 	public String edit(@PathVariable("fileNameId") Integer fileNameId, ModelMap mmap)
 	{
 		FileNameConfig fileNameConfig = fileNameConfigService.selectFileNameConfigById(fileNameId);
+        fileNameConfig = NumChangeName.anayle(fileNameConfig);
 		mmap.put("fileNameConfig", fileNameConfig);
 	    return prefix + "/edit";
 	}

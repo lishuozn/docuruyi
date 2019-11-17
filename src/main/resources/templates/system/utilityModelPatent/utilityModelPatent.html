@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('实用新型专利列表')" />
+    <th:block th:include="include :: layout-latest-css" />
+    <th:block th:include="include :: ztree-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								专利名称：<input type="text" name="patentName"/>
+							</li>
+
+							<li>
+								专利号：<input type="text" name="patentNumber"/>
+							</li>
+
+							<li>
+								第一发明人：<input type="text" name="inventor1Name"/>
+							</li>
+
+							<li>
+								第一发明人专业：<input type="text" name="inventor1MajorId"/>
+							</li>
+
+							<li>
+								其它发明人：<input type="text" name="otherInventor"/>
+							</li>
+
+							<li>
+								专利权人：<input type="text" name="patentee"/>
+							</li>
+
+							<li class="select-time">
+								<label>授权公告日： </label>
+								<input type="text" class="time-input" id="startAccreditNoticeDate" placeholder="开始" name="params[beginAccreditNoticeDate]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endAccreditNoticeDate" placeholder="结束" name="params[endAccreditNoticeDate]"/>
+							</li>
+							<li>
+								附件：<input type="text" name="attachFile"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:utilityModelPatent:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:utilityModelPatent:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:utilityModelPatent:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:utilityModelPatent:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+                <a class="btn btn-info" onclick="batchDownload()" shiro:hasPermission="system:docPaper:export">
+                    <i class="fa fa-download"></i> 附件下载
+                </a>
+                <a class="btn btn-primary btn-edit disabled" onclick="$.operate.detail()" shiro:hasPermission="system:docPaper:edit">
+                    <i class="fa fa-search"></i> 详细
+                </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+     <th:block th:include="include :: bootstrap-table-reorder-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:utilityModelPatent:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:utilityModelPatent:remove')}]];
+        var prefix = ctx + "system/utilityModelPatent";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                detailUrl: prefix + "/detail/{id}",
+                modalName: "实用新型专利",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'patentId', 
+					title : '专利Id',
+					visible: false
+				},
+				{
+					field : 'patentName', 
+					title : '专利名称',
+					sortable: true
+				},
+				{
+					field : 'patentNumber', 
+					title : '专利号',
+					sortable: true
+				},
+				{
+					field : 'inventor1Name', 
+					title : '第一发明人',
+					sortable: true
+				},
+				{
+					field : 'utilityModelPatentMajor.deptName',
+					title : '第一发明人专业',
+					sortable: true
+				},
+				{
+					field : 'otherInventor', 
+					title : '其它发明人',
+					sortable: true
+				},
+				{
+					field : 'patentee', 
+					title : '专利权人',
+					sortable: true
+				},
+				{
+					field : 'accreditNoticeDate', 
+					title : '授权公告日',
+					sortable: true
+				},
+				{
+					field : 'attachFile', 
+					title : '附件操作',
+					sortable: true,
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        var pathUrl= "system/utilityModelPatent/utilityModelPatent?pbId=";
+                        actions.push('<a class="btn btn-success btn-xs" shiro:hasPermission="system:publication:publication" onclick="$.operate.pdfPreview(\'' +pathUrl+ row.patentId + '\')"><i class="fa fa-file-pdf-o"></i> 预览</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs" href="javascript:downloadFile(' + row.patentId + ')"><i class="fa fa-download"></i>下载</a>');
+                        return actions.join('');
+                    }
+				},
+		        {
+		            title: '内容操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.patentId + '\')"><i class="fa fa-search"></i>详细</a> ');
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.patentId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.patentId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        function downloadFile(patentId){
+            window.location.href = ctx + "system/utilityModelPatent/downloadFile/" + patentId;
+        }
+        //批量下载
+        function batchDownload() {
+            var index= $.table.getIdSelections();
+            var  attachFile= $.table.selectColumns('attachFile');
+            var  ids= $.table.selectColumns('patentId');
+            window.location.href = ctx + "system/utilityModelPatent/downloadFile/batchDownload?attachFile="+attachFile + "&column="+index+ "&patentId="+ids;
+        };
+    </script>
+</body>
+</html>

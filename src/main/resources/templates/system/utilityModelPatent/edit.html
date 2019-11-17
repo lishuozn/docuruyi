@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('修改实用新型专利')" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-utilityModelPatent-edit" th:object="${utilityModelPatent}">
+            <input id="patentId" name="patentId" th:field="*{patentId}"  type="hidden">
+            <input id="attachFile" type="hidden"  th:field="*{attachFile}" />
+            <input name="author1MajorId" type="hidden" id="treeId"/>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">专利名称：</label>
+				<div class="col-sm-8">
+					<input id="patentName" name="patentName" th:field="*{patentName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">专利号：</label>
+				<div class="col-sm-8">
+					<input id="patentNumber" name="patentNumber" th:field="*{patentNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第一发明人：</label>
+				<div class="col-sm-8">
+					<input id="inventor1Name" name="inventor1Name" th:field="*{inventor1Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第一发明人专业：</label>
+				<!--<div class="col-sm-8">-->
+					<!--<input id="inventor1MajorId" name="inventor1MajorId" th:field="*{inventor1MajorId}" class="form-control" type="text">-->
+				<!--</div>-->
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input name="modMajorId"  id="treeName" type="text" placeholder="请选择专业"
+							   th:field="*{utilityModelPatentMajor.deptName}" class="form-control authorMajor" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其它发明人：</label>
+				<div class="col-sm-8">
+					<input id="otherInventor" name="otherInventor" th:field="*{otherInventor}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">专利权人：</label>
+				<div class="col-sm-8">
+					<input id="patentee" name="patentee" th:field="*{patentee}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">授权公告日：</label>
+				<div class="col-sm-8">
+					<input id="accreditNoticeDate"  name="accreditNoticeDate" th:value="*{#dates.format(accreditNoticeDate, 'yyyy-MM-dd')}" class="form-control time-input" type="text">
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">附件预览：</label>
+                <div class="col-sm-8">
+                    <a class="btn btn-link btn-sm" shiro:hasPermission="system:sciResSubject:sciResSubject"
+                       th:onclick="'javascript:fileShow('+*{patentId}+')' "><i class="fa fa-file-pdf-o"></i>预览文件</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+                <div class="col-sm-8">
+                    <button id="modifyBtn" class="btn btn-success btn-sm" type="button" onclick="showFileInput()">点击修改</button>
+                </div>
+            </div>
+            <div id="fileInput" class="form-group hidden">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-8">
+                    <div class="wrapper-content animated fadeInRight">
+                        <div class="row">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <label class="font-noraml">多文件上传</label>
+                                        <div class="file-loading">
+                                            <input id="file" name="file" class="form-control" type="file" multiple>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">附件：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="attachFile" name="attachFile" th:field="*{attachFile}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+		var prefix = ctx + "system/utilityModelPatent";
+		$("#form-utilityModelPatent-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            // $.operate.save(prefix + "/edit", $('#form-utilityModelPatent-edit').serialize());
+                uploadFile();
+	        }
+	    }
+        //上传文件
+        function uploadFile() {
+            var formData = new FormData();
+            if (modified==true && $('#file')[0].files[0] == null) {
+                $.modal.alertWarning("请先选择文件路径");
+                return false;
+            }
+            formData.append('file', $('#file')[0].files[0]);
+            formData.append('patentId', $("#patentId").val());
+            formData.append('patentName', $("#patentName").val());
+            formData.append('patentNumber', $("#patentNumber").val());
+            formData.append('inventor1Name', $("#inventor1Name").val());
+            formData.append('inventor1MajorId', $("#treeId").val());
+            formData.append('otherInventor', $("#otherInventor").val());
+            formData.append('patentee', $("#patentee").val());
+            formData.append('accreditNoticeDate', $("#accreditNoticeDate").val());
+            formData.append('attachFile', $('#attachFile').val());
+            $.ajax({
+                url: prefix + "/edit",
+                type: 'post',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function(result) {
+                    $.operate.successCallback(result);
+                }
+            });
+        }
+        //专业树开始
+        var currentTreeName = "";
+        $(".authorMajor").click(function () {
+            currentTreeName = $(this).attr("id");
+            var treeId = $("#treeId").val();
+            var modMajorId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + modMajorId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        });
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                // $("#"+currentTreeName).val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+        //专业树结束
+        //文件预览
+        function fileShow(subjectId){
+            var pathUrl= "system/utilityModelPatent/utilityModelPatent?pbId=";
+            $.operate.pdfPreview(pathUrl+subjectId);
+        }
+        //文件预览结束
+        //修改文件按钮控制
+        var modified = false;
+        function showFileInput(){
+            if(modified){
+                modified = false;
+                $("#fileInput").addClass("hidden");
+                $("#modifyBtn").text("点击修改");
+            }else{
+                modified=true;
+                $("#fileInput").removeClass("hidden");
+                $("#modifyBtn").text("取消修改");
+            }
+        };
+        $(document).ready(function () {
+            $("#file").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': '#',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                maxFileCount: 1,
+                maxFileSize:50000,
+                /*
+				initialPreview: [
+                    "/img/profile.jpg"
+                ]
+                */
+            });
+        });
+	</script>
+</body>
+</html>
