@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增发明专利')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-invention-add">
+			<input type="hidden" id="firstInventorMajorId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" ><span style="color: red; ">*</span>发明名称：</label>
+				<div class="col-sm-8">
+					<input required id="inventionName" name="inventionName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>发明状态：</label>
+				<div class="col-sm-8">
+					<select name="inventionState" id="inventionState" class="form-control m-b" th:with="type=${@dict.getType('sys_invention_state')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>专利号：</label>
+				<div class="col-sm-8">
+					<input required id="patentNumber" name="patentNumber" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一发明人：</label>
+				<div class="col-sm-8">
+					<input required id="firstInventor" name="firstInventor" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一发明人专业：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input onclick="selectDeptTree()"  id="1"  name="firstInventorMajor" type="text" placeholder="请选择专业" class="form-control" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">其他发明人：</label>
+				<div class="col-sm-8">
+					<input id="otherInventor" name="otherInventor" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>专利权所有人：</label>
+				<div class="col-sm-8">
+					<input required id="patentRightBelongsTo" name="patentRightBelongsTo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>申请时间：</label>
+				<div class="col-sm-8">
+					<input required id="appliedDate" name="appliedDate" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>实审时间：</label>
+				<div class="col-sm-8">
+					<input required id="examDate" name="examDate" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>授权公告日：</label>
+				<div class="col-sm-8">
+					<input required id="announcementDate" name="announcementDate" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+			<!--	<label class="col-sm-3 control-label">附件：</label>-->
+			<!--	<div class="col-sm-8">-->
+			<!--		<input id="attachFile" name="attachFile" class="form-control" type="text">-->
+			<!--	</div>-->
+			<!--</div>-->
+			<!--文件上传-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+				<div class="col-sm-8">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="file" name="file" class="form-control" type="file" multiple>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<textarea id="note" name="note" class="form-control" type="text"></textarea>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+			<!--	<label class="col-sm-3 control-label"><span style="color: red; ">*</span>创建者：</label>-->
+			<!--	<div class="col-sm-8">-->
+			<!--		<input id="createdBy" name="createdBy" class="form-control" type="text">-->
+			<!--	</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">	-->
+			<!--	<label class="col-sm-3 control-label"><span style="color: red; ">*</span>创建时间：</label>-->
+			<!--	<div class="col-sm-8">-->
+			<!--		<input id="createdDate" name="createdDate" class="form-control time-input" type="text">-->
+			<!--	</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">	-->
+			<!--	<label class="col-sm-3 control-label"><span style="color: red; ">*</span>最近修改者：</label>-->
+			<!--	<div class="col-sm-8">-->
+			<!--		<input id="modifiedBy" name="modifiedBy" class="form-control" type="text">-->
+			<!--	</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">	-->
+			<!--	<label class="col-sm-3 control-label"><span style="color: red; ">*</span>最近修改时间：</label>-->
+			<!--	<div class="col-sm-8">-->
+			<!--		<input id="modifiedDate" name="modifiedDate" class="form-control time-input" type="text">-->
+			<!--	</div>-->
+			<!--</div>-->
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+	<script type="text/javascript">
+		var prefix = ctx + "system/invention"
+
+		$(function () {
+			initFileInput();
+		});
+
+
+		$("#form-invention-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+			if ($.validate.form()) {
+				if ($('#file')[0].files[0] == null) {
+					$.modal.alertWarning("请先上传一个附件");
+					return false;
+				}
+
+				var formData = inventionInfoCollect();
+
+				$.ajax({
+					url: prefix + "/add",
+					type: "post",
+					dataType: "json",
+					cache: false,
+					data: formData,
+					processData: false,
+					contentType: false,
+					maxFileSize:51200,
+					success: function(result) {
+						$.operate.successCallback(result);
+					}
+				});
+
+			}
+	    }
+
+		function inventionInfoCollect(){
+			var formData = new FormData();
+			formData.append("inventionName",$('#inventionName').val());
+			formData.append("inventionState",$('#inventionState').val());
+			formData.append("patentNumber",$('#patentNumber').val());
+			formData.append("firstInventor",$('#firstInventor').val());
+			formData.append("firstInventorMajor",$('#firstInventorMajorId').val());
+			formData.append("otherInventor",$('#otherInventor').val());
+			formData.append("patentRightBelongsTo",$('#patentRightBelongsTo').val());
+			formData.append("appliedDate",$('#appliedDate').val());
+			formData.append("examDate",$('#examDate').val());
+			formData.append("announcementDate",$('#announcementDate').val());
+			//file
+			formData.append("file",$('#file')[0].files[0]);
+			formData.append("note",$('#note').val());
+			return formData;
+		}
+
+		function selectDeptTree() {
+			var treeId = $("#1").val();
+			var deptId = $.common.isEmpty(treeId) ? "100" : $("#1").val();
+			var url = ctx + "system/dept/selectDeptTree/" + deptId;
+			var options = {
+				title: '选择部门',
+				width: "380",
+				url: url,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			if ($.tree.notAllowParents(tree)) {
+				var body = layer.getChildFrame('body', index);
+
+				$("#firstInventorMajorId").val(body.find('#treeId').val());
+				$("#1").val(body.find('#treeName').val());
+				layer.close(index);
+			}
+		}
+
+
+		function initFileInput(){
+			$("#file").fileinput({
+				'theme': 'explorer-fas',
+				'uploadUrl':'#',
+				pdfRendererUrl: 'https://plugins.krajee.com/pdfjs/web/viewer.html',
+				overwriteInitial: false,
+				initialPreviewAsData: true,
+				maxFileCount: 1,
+				showUpload:false,
+				layoutTemplates:{
+					actionUpload: '',
+				},
+				initialPreviewConfig: [
+					{type: 'pdf', size: 3072}
+				]
+			});
+		}
+	</script>
+</body>
+</html>

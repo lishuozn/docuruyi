@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.publication.mapper.PublicationMapper">
+
+    <resultMap type="Publication" id="PublicationResult">
+        <result property="pbId"    column="pb_id"    />
+        <result property="pbKind"    column="pb_kind"    />
+        <result property="pbTitle"    column="pb_title"    />
+        <result property="author1Id"    column="author1_id"    />
+        <result property="author1Name"    column="author1_name"    />
+        <result property="author1MajorId"    column="author1_major_id"    />
+        <result property="author2Id"    column="author2_id"    />
+        <result property="author2Name"    column="author2_name"    />
+        <result property="author2MajorId"    column="author2_major_id"    />
+        <result property="authorNameOther"    column="author_name_other"    />
+        <result property="publisherName"    column="publisher_name"    />
+        <result property="publishNumber"    column="publish_number"    />
+        <result property="publisherLevel"    column="publisher_level"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="issnNumber"    column="issn_number"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+    </resultMap>
+
+    <resultMap type="PublicationVO" id="PublicationVOResult">
+        <id property="pbId"    column="pb_id"    />
+        <result property="pbKind"    column="pb_kind"    />
+        <result property="pbTitle"    column="pb_title"    />
+        <result property="author1Id"    column="author1_id"    />
+        <result property="author1Name"    column="author1_name"    />
+        <result property="author2Id"    column="author2_id"    />
+        <result property="author2Name"    column="author2_name"    />
+        <result property="authorNameOther"    column="author_name_other"    />
+        <result property="publisherName"    column="publisher_name"    />
+        <result property="publishNumber"    column="publish_number"    />
+        <result property="publisherLevel"    column="publisher_level"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="issnNumber"    column="issn_number"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+        <association property="author1Major"    column="author1_major_id" javaType="Dept" resultMap="author1MajorResult" />
+        <association property="author2Major"    column="author2_major_id" javaType="Dept" resultMap="author2MajorResult" />
+    </resultMap>
+
+    <resultMap id="author1MajorResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+    <resultMap id="author2MajorResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+
+    <sql id="selectPublicationVo">
+        select pb_id, pb_kind, pb_title, author1_id, author1_name, author1_major_id, author2_id, author2_name, author2_major_id, author_name_other, publisher_name, publish_number, publisher_level, publish_date, issn_number, attach_file, notes from sys_publication
+    </sql>
+
+    <select id="selectPublicationById" parameterType="Integer" resultMap="PublicationResult">
+        <include refid="selectPublicationVo"/>
+        where pb_id = #{pbId}
+    </select>
+
+    <sql id="selectPublicationVo_new">
+              select spb.pb_id, spb.pb_kind, spb.pb_title, spb.author1_id, spb.author1_name, spb.author1_major_id,
+        spb.author2_id, spb.author2_name, spb.author2_major_id, spb.author_name_other, spb.publisher_name,
+         spb.publish_number, spb.publisher_level, spb.publish_date, spb.issn_number, spb.attach_file, spb.notes ,
+
+
+				 d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+
+				 				 d2.dept_id, d2.parent_id, d2.dept_name, d2.order_num, d2.leader, d2.status as dept_status
+         from sys_publication spb
+          left join sys_dept d on spb.author1_major_id = d.dept_id
+					          left join sys_dept d2 on spb.author2_major_id = d2.dept_id
+    </sql>
+
+	
+    <select id="selectPublicationList" parameterType="Publication" resultMap="PublicationResult">
+        <include refid="selectPublicationVo_new"/>
+        <where>  
+            <if test="pbId != null "> and pb_id = #{pbId}</if>
+             <if test="pbKind != null  and pbKind != '' "> and pb_kind = #{pbKind}</if>
+             <if test="pbTitle != null  and pbTitle != '' "> and pb_title = #{pbTitle}</if>
+             <if test="author1Id != null "> and author1_id = #{author1Id}</if>
+             <if test="author1Name != null  and author1Name != '' "> and author1_name = #{author1Name}</if>
+             <if test="author1MajorId != null "> and author1_major_id = #{author1MajorId}</if>
+             <if test="author2Id != null "> and author2_id = #{author2Id}</if>
+             <if test="author2Name != null  and author2Name != '' "> and author2_name = #{author2Name}</if>
+             <if test="author2MajorId != null "> and author2_major_id = #{author2MajorId}</if>
+             <if test="authorNameOther != null  and authorNameOther != '' "> and author_name_other = #{authorNameOther}</if>
+             <if test="publisherName != null  and publisherName != '' "> and publisher_name = #{publisherName}</if>
+             <if test="publishNumber != null  and publishNumber != '' "> and publish_number = #{publishNumber}</if>
+             <if test="publisherLevel != null  and publisherLevel != '' "> and publisher_level = #{publisherLevel}</if>
+             <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+             <if test="issnNumber != null  and issnNumber != '' "> and issn_number = #{issnNumber}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+             <if test="notes != null  and notes != '' "> and notes = #{notes}</if>
+         </where>
+    </select>
+
+    <!--<select id="selectPublicationById" resultMap="PublicationResult">-->
+    <!--    select * from sys_publication-->
+    <!--    <where>-->
+    <!--        <if test="pbId != null "> and pb_id = #{pbId}</if>-->
+    <!--    </where>-->
+    <!--</select>-->
+
+    <select id="selectPublicatioVOById" resultMap="PublicationVOResult">
+        <include refid="selectPublicationVo_new"/>
+        <where>
+            <if test="pbId != null "> and pb_id = #{pbId}</if>
+        </where>
+    </select>
+
+
+    <select id="selectPublicationVOList" resultMap="PublicationVOResult">
+        <include refid="selectPublicationVo_new"/>
+    </select>
+
+
+    <insert id="insertPublication" parameterType="Publication" useGeneratedKeys="true" keyProperty="pbId" keyColumn="pb_id">
+        insert into sys_publication
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pbKind != null  and pbKind != ''  ">pb_kind,</if>
+			<if test="pbTitle != null  and pbTitle != ''  ">pb_title,</if>
+			<if test="author1Id != null  ">author1_id,</if>
+			<if test="author1Name != null  and author1Name != ''  ">author1_name,</if>
+			<if test="author1MajorId != null  ">author1_major_id,</if>
+			<if test="author2Id != null  ">author2_id,</if>
+			<if test="author2Name != null  and author2Name != ''  ">author2_name,</if>
+			<if test="author2MajorId != null  ">author2_major_id,</if>
+			<if test="authorNameOther != null  and authorNameOther != ''  ">author_name_other,</if>
+			<if test="publisherName != null  and publisherName != ''  ">publisher_name,</if>
+			<if test="publishNumber != null  and publishNumber != ''  ">publish_number,</if>
+			<if test="publisherLevel != null  and publisherLevel != ''  ">publisher_level,</if>
+			<if test="publishDate != null  ">publish_date,</if>
+			<if test="issnNumber != null  and issnNumber != ''  ">issn_number,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+			<if test="notes != null  and notes != ''  ">notes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pbKind != null  and pbKind != ''  ">#{pbKind},</if>
+			<if test="pbTitle != null  and pbTitle != ''  ">#{pbTitle},</if>
+			<if test="author1Id != null  ">#{author1Id},</if>
+			<if test="author1Name != null  and author1Name != ''  ">#{author1Name},</if>
+			<if test="author1MajorId != null  ">#{author1MajorId},</if>
+			<if test="author2Id != null  ">#{author2Id},</if>
+			<if test="author2Name != null  and author2Name != ''  ">#{author2Name},</if>
+			<if test="author2MajorId != null  ">#{author2MajorId},</if>
+			<if test="authorNameOther != null  and authorNameOther != ''  ">#{authorNameOther},</if>
+			<if test="publisherName != null  and publisherName != ''  ">#{publisherName},</if>
+			<if test="publishNumber != null  and publishNumber != ''  ">#{publishNumber},</if>
+			<if test="publisherLevel != null  and publisherLevel != ''  ">#{publisherLevel},</if>
+			<if test="publishDate != null  ">#{publishDate},</if>
+			<if test="issnNumber != null  and issnNumber != ''  ">#{issnNumber},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+			<if test="notes != null  and notes != ''  ">#{notes},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePublication" parameterType="Publication">
+        update sys_publication
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pbKind != null  and pbKind != ''  ">pb_kind = #{pbKind},</if>
+            <if test="pbTitle != null  and pbTitle != ''  ">pb_title = #{pbTitle},</if>
+            <if test="author1Id != null  ">author1_id = #{author1Id},</if>
+            <if test="author1Name != null  and author1Name != ''  ">author1_name = #{author1Name},</if>
+            <if test="author1MajorId != null  ">author1_major_id = #{author1MajorId},</if>
+            <if test="author2Id != null  ">author2_id = #{author2Id},</if>
+            <if test="author2Name != null  and author2Name != ''  ">author2_name = #{author2Name},</if>
+            <if test="author2MajorId != null  ">author2_major_id = #{author2MajorId},</if>
+            <if test="authorNameOther != null  and authorNameOther != ''  ">author_name_other = #{authorNameOther},</if>
+            <if test="publisherName != null  and publisherName != ''  ">publisher_name = #{publisherName},</if>
+            <if test="publishNumber != null  and publishNumber != ''  ">publish_number = #{publishNumber},</if>
+            <if test="publisherLevel != null  and publisherLevel != ''  ">publisher_level = #{publisherLevel},</if>
+            <if test="publishDate != null  ">publish_date = #{publishDate},</if>
+            <if test="issnNumber != null  and issnNumber != ''  ">issn_number = #{issnNumber},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+            <if test="notes != null  and notes != ''  ">notes = #{notes},</if>
+        </trim>
+        where pb_id = #{pbId}
+    </update>
+
+
+    <delete id="deletePublicationById" parameterType="Integer">
+        delete from sys_publication where pb_id = #{pbId}
+    </delete>
+	
+    <delete id="deletePublicationByIds" parameterType="String">
+        delete from sys_publication where pb_id in 
+        <foreach item="pbId" collection="array" open="(" separator="," close=")">
+            #{pbId}
+        </foreach>
+    </delete>
+
+    <update id="updatePublicationAttachFilePathByPbId">
+        update sys_publication set attach_file = #{filePath}
+        where pb_id = #{pbId}
+    </update>
+    
+</mapper>

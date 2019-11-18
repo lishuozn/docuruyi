@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.invention.mapper.InventionMapper">
+    
+    <resultMap type="Invention" id="InventionResult">
+        <result property="inventionId"    column="invention_id"    />
+        <result property="inventionName"    column="invention_name"    />
+        <result property="inventionState"    column="invention_state"    />
+        <result property="patentNumber"    column="patent_number"    />
+        <result property="firstInventor"    column="first_inventor"    />
+        <result property="firstInventorMajor"    column="first_inventor_major"    />
+        <result property="otherInventor"    column="other_inventor"    />
+        <result property="patentRightBelongsTo"    column="patent_right_belongs_to"    />
+        <result property="appliedDate"    column="applied_date"    />
+        <result property="examDate"    column="exam_date"    />
+        <result property="announcementDate"    column="announcement_date"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="note"    column="note"    />
+        <result property="createdBy"    column="created_By"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="modifiedBy"    column="modified_by"    />
+        <result property="modifiedDate"    column="modified_date"    />
+    </resultMap>
+    <resultMap type="InventionVO" id="MyInventionResult">
+        <result property="inventionId"    column="invention_id"    />
+        <result property="inventionName"    column="invention_name"    />
+        <result property="inventionState"    column="invention_state"    />
+        <result property="patentNumber"    column="patent_number"    />
+        <result property="firstInventor"    column="first_inventor"    />
+        <result property="otherInventor"    column="other_inventor"    />
+        <result property="patentRightBelongsTo"    column="patent_right_belongs_to"    />
+        <result property="appliedDate"    column="applied_date"    />
+        <result property="examDate"    column="exam_date"    />
+        <result property="announcementDate"    column="announcement_date"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="note"    column="note"    />
+        <result property="createdBy"    column="created_By"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="modifiedBy"    column="modified_by"    />
+        <result property="modifiedDate"    column="modified_date"    />
+        <association property="firstInventorMajor" column="first_inventor_major"  javaType="Dept" resultMap="firstInventorMajorResult" />
+    </resultMap>
+    <resultMap id="firstInventorMajorResult" type="Dept">
+        <id property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+	<sql id="selectInventionVo">
+        select invention_id, invention_name, invention_state, patent_number, first_inventor,
+        first_inventor_major, other_inventor, patent_right_belongs_to, applied_date, exam_date,
+        announcement_date, attach_file, note, created_By, created_date, modified_by, modified_date from sys_invention
+    </sql>
+    <sql id="selectMyInventionVo">
+        select invention_id, invention_name, invention_state, patent_number, first_inventor,
+        first_inventor_major, other_inventor, patent_right_belongs_to, applied_date, exam_date,
+        announcement_date, attach_file, note, created_By, created_date, modified_by, modified_date,
+
+        d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status
+
+        from sys_invention iv left join sys_dept d on first_inventor_major = d.dept_id
+    </sql>
+	
+    <select id="selectInventionList" parameterType="Invention" resultMap="InventionResult">
+        <include refid="selectInventionVo"/>
+        <where>  
+            <if test="inventionId != null "> and invention_id = #{inventionId}</if>
+             <if test="inventionName != null  and inventionName != '' "> and invention_name = #{inventionName}</if>
+             <if test="inventionState != null "> and invention_state = #{inventionState}</if>
+             <if test="patentNumber != null  and patentNumber != '' "> and patent_number = #{patentNumber}</if>
+             <if test="firstInventor != null  and firstInventor != '' "> and first_inventor = #{firstInventor}</if>
+             <if test="firstInventorMajor != null "> and first_inventor_major = #{firstInventorMajor}</if>
+             <if test="otherInventor != null  and otherInventor != '' "> and other_inventor = #{otherInventor}</if>
+             <if test="patentRightBelongsTo != null  and patentRightBelongsTo != '' "> and patent_right_belongs_to = #{patentRightBelongsTo}</if>
+             <if test="appliedDate != null "> and applied_date = #{appliedDate}</if>
+             <if test="examDate != null "> and exam_date = #{examDate}</if>
+             <if test="announcementDate != null "> and announcement_date = #{announcementDate}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+             <if test="note != null  and note != '' "> and note = #{note}</if>
+             <if test="createdBy != null  and createdBy != '' "> and created_By = #{createdBy}</if>
+             <if test="createdDate != null "> and created_date = #{createdDate}</if>
+             <if test="modifiedBy != null  and modifiedBy != '' "> and modified_by = #{modifiedBy}</if>
+             <if test="modifiedDate != null "> and modified_date = #{modifiedDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectInventionById" parameterType="Integer" resultMap="InventionResult">
+        <include refid="selectInventionVo"/>
+        where invention_id = #{inventionId}
+    </select>
+
+    <select id="selectInventionVOById" resultMap="MyInventionResult">
+        <include refid="selectMyInventionVo"/>
+        where invention_id = #{inventionId}
+    </select>
+    <select id="selectInventionVOList" resultMap="MyInventionResult">
+        <include refid="selectMyInventionVo"/>
+        <where>
+            <if test="inventionId != null "> and invention_id = #{inventionId}</if>
+            <if test="inventionName != null  and inventionName != '' "> and invention_name = #{inventionName}</if>
+            <if test="inventionState != null "> and invention_state = #{inventionState}</if>
+            <if test="patentNumber != null  and patentNumber != '' "> and patent_number = #{patentNumber}</if>
+            <if test="firstInventor != null  and firstInventor != '' "> and first_inventor = #{firstInventor}</if>
+            <if test="firstInventorMajor != null "> and first_inventor_major = #{firstInventorMajor}</if>
+            <if test="otherInventor != null  and otherInventor != '' "> and other_inventor = #{otherInventor}</if>
+            <if test="patentRightBelongsTo != null  and patentRightBelongsTo != '' "> and patent_right_belongs_to = #{patentRightBelongsTo}</if>
+            <if test="appliedDate != null "> and applied_date = #{appliedDate}</if>
+            <if test="examDate != null "> and exam_date = #{examDate}</if>
+            <if test="announcementDate != null "> and announcement_date = #{announcementDate}</if>
+            <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+            <if test="note != null  and note != '' "> and note = #{note}</if>
+            <if test="createdBy != null  and createdBy != '' "> and created_By = #{createdBy}</if>
+            <if test="createdDate != null "> and created_date = #{createdDate}</if>
+            <if test="modifiedBy != null  and modifiedBy != '' "> and modified_by = #{modifiedBy}</if>
+            <if test="modifiedDate != null "> and modified_date = #{modifiedDate}</if>
+        </where>
+    </select>
+
+    <insert id="insertInvention" parameterType="Invention" useGeneratedKeys="true" keyProperty="inventionId">
+        insert into sys_invention
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="inventionName != null  and inventionName != ''  ">invention_name,</if>
+			<if test="inventionState != null  ">invention_state,</if>
+			<if test="patentNumber != null  and patentNumber != ''  ">patent_number,</if>
+			<if test="firstInventor != null  and firstInventor != ''  ">first_inventor,</if>
+			<if test="firstInventorMajor != null  ">first_inventor_major,</if>
+			<if test="otherInventor != null  and otherInventor != ''  ">other_inventor,</if>
+			<if test="patentRightBelongsTo != null  and patentRightBelongsTo != ''  ">patent_right_belongs_to,</if>
+			<if test="appliedDate != null  ">applied_date,</if>
+			<if test="examDate != null  ">exam_date,</if>
+			<if test="announcementDate != null  ">announcement_date,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+			<if test="note != null  and note != ''  ">note,</if>
+			<if test="createdBy != null  and createdBy != ''  ">created_By,</if>
+			<if test="createdDate != null  ">created_date,</if>
+			<if test="modifiedBy != null  and modifiedBy != ''  ">modified_by,</if>
+			<if test="modifiedDate != null  ">modified_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="inventionName != null  and inventionName != ''  ">#{inventionName},</if>
+			<if test="inventionState != null  ">#{inventionState},</if>
+			<if test="patentNumber != null  and patentNumber != ''  ">#{patentNumber},</if>
+			<if test="firstInventor != null  and firstInventor != ''  ">#{firstInventor},</if>
+			<if test="firstInventorMajor != null  ">#{firstInventorMajor},</if>
+			<if test="otherInventor != null  and otherInventor != ''  ">#{otherInventor},</if>
+			<if test="patentRightBelongsTo != null  and patentRightBelongsTo != ''  ">#{patentRightBelongsTo},</if>
+			<if test="appliedDate != null  ">#{appliedDate},</if>
+			<if test="examDate != null  ">#{examDate},</if>
+			<if test="announcementDate != null  ">#{announcementDate},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+			<if test="note != null  and note != ''  ">#{note},</if>
+			<if test="createdBy != null  and createdBy != ''  ">#{createdBy},</if>
+			<if test="createdDate != null  ">#{createdDate},</if>
+			<if test="modifiedBy != null  and modifiedBy != ''  ">#{modifiedBy},</if>
+			<if test="modifiedDate != null  ">#{modifiedDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateInvention" parameterType="Invention">
+        update sys_invention
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inventionName != null  and inventionName != ''  ">invention_name = #{inventionName},</if>
+            <if test="inventionState != null  ">invention_state = #{inventionState},</if>
+            <if test="patentNumber != null  and patentNumber != ''  ">patent_number = #{patentNumber},</if>
+            <if test="firstInventor != null  and firstInventor != ''  ">first_inventor = #{firstInventor},</if>
+            <if test="firstInventorMajor != null  ">first_inventor_major = #{firstInventorMajor},</if>
+            <if test="otherInventor != null  and otherInventor != ''  ">other_inventor = #{otherInventor},</if>
+            <if test="patentRightBelongsTo != null  and patentRightBelongsTo != ''  ">patent_right_belongs_to = #{patentRightBelongsTo},</if>
+            <if test="appliedDate != null  ">applied_date = #{appliedDate},</if>
+            <if test="examDate != null  ">exam_date = #{examDate},</if>
+            <if test="announcementDate != null  ">announcement_date = #{announcementDate},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+            <if test="note != null  and note != ''  ">note = #{note},</if>
+            <if test="createdBy != null  and createdBy != ''  ">created_By = #{createdBy},</if>
+            <if test="createdDate != null  ">created_date = #{createdDate},</if>
+            <if test="modifiedBy != null  and modifiedBy != ''  ">modified_by = #{modifiedBy},</if>
+            <if test="modifiedDate != null  ">modified_date = #{modifiedDate},</if>
+        </trim>
+        where invention_id = #{inventionId}
+    </update>
+
+	<delete id="deleteInventionById" parameterType="Integer">
+        delete from sys_invention where invention_id = #{inventionId}
+    </delete>
+	
+    <delete id="deleteInventionByIds" parameterType="String">
+        delete from sys_invention where invention_id in 
+        <foreach item="inventionId" collection="array" open="(" separator="," close=")">
+            #{inventionId}
+        </foreach>
+    </delete>
+    
+</mapper>

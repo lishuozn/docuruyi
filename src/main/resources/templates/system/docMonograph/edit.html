@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+	<th:block th:include="include :: header('修改专著')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-docMonograph-edit" th:object="${docMonograph}">
+            <input id="monographId" name="monographId" th:field="*{monographId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">专著名称：</label>
+				<div class="col-sm-8">
+					<input id="monographName" name="monographName" th:field="*{monographName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">作者id-备用：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" th:field="*{author1Id}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一作名字：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" th:field="*{author1Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一作专业：</label>
+				<div class="col-sm-8">
+					<!--<input id="author1MajorId" name="author1MajorId" th:field="*{author1MajorId}" class="form-control" type="text">-->
+					<div class="input-group">
+					<input id="author1MajorId" type="text" th:field="*{major1.deptName}"  class="form-control authorMajor" required>
+					<input hidden name="author1MajorId" type="text" class="author1MajorId">
+					<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作名字：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" th:field="*{author2Name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作专业：</label>
+				<div class="col-sm-8">
+					<!--<input id="author2MajorId" name="author2MajorId" th:field="*{author2MajorId}" class="form-control" type="text">-->
+					<div class="input-group">
+					<input id="author2MajorId" type="text" th:field="*{major2.deptName}" class="form-control authorMajor">
+					<input hidden name="author2MajorId" type="text" class="author2MajorId">
+					<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" th:field="*{authorNameOther}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出版社名称：</label>
+				<div class="col-sm-8">
+					<input id="pressName" name="pressName" th:field="*{pressName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出版时间：</label>
+				<div class="col-sm-8">
+					<input id="publishDate" name="publishDate" th:value="*{#dates.format(publishDate, 'yyyy-MM-dd')}" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出版社级别：</label>
+				<div class="col-sm-8">
+					<input id="pressLevel" name="pressLevel" th:field="*{pressLevel}" class="form-control" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">附件：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="attachFile" name="attachFile" th:field="*{attachFile}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">附件预览：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<a class="btn btn-link btn-sm" shiro:hasPermission="system:docMonograph:docMonograph" th:onclick="'javascript:$.operate.pdfPreview('*{'/system/docMonograph/docMonograph?dMId='monographId}+')' "><i class="fa fa-file-pdf-o"></i>	预览文件</a>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+				<div class="col-sm-8">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="attachFile"  name="attachFile" class="form-control" type="file" multiple>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" th:field="*{notes}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+    <script th:inline="javascript" type="text/javascript">
+		var prefix = ctx + "system/docMonograph";
+		$("#form-docMonograph-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+		function submitHandler() {
+	        if ($.validate.form()) {
+                if ($('#attachFile')[0].files[0] != null) {
+
+                    $.modal.alertWarning("请将文件上传");
+                    return false;
+                }
+	            $.operate.save(prefix + "/edit", $('#form-docMonograph-edit').serialize());
+	        }
+	    }
+        var currentTreeName = "";
+        $(".authorMajor").click(function () {
+            currentTreeName = $(this).attr("id");
+            var treeId = $("#treeId").val();
+            var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + deptId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        });
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                // alert("选择的是"+body.find('#treeId').val());
+                $("#"+currentTreeName).val(body.find('#treeName').val())
+                var authorMajor = $("input."+currentTreeName);
+                authorMajor.val(body.find('#treeId').val());
+                // alert("框中的内容为"+$('#author1MajorId').val());
+                layer.close(index);
+            }
+        }
+
+        var filename = [[${docMonograph.attachFile}]];
+        $(document).ready(function () {
+            $('#attachFile').fileinput({
+                uploadUrl: prefix+'/updateFile',
+                // deleteUrl: prefix+"/removeFile",
+                // deleteExtraData:{
+                //     pbId:[[${docMonograph.monographId}]],
+                //     fileUrl:"upload/"+filename
+                // },
+                // maxFileCount: 1,
+                // showUpload:false,
+                layoutTemplates:{
+                    actionUpload: ''
+                },
+                pdfRendererUrl: 'https://plugins.krajee.com/pdfjs/web/viewer.html',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    "/profile/upload/"+filename
+                ],
+                initialPreviewConfig: [
+                    {type: 'pdf', size: 307200}
+                ]
+
+            });
+        });
+
+	</script>
+</body>
+</html>

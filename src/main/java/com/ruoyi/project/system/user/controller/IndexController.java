@@ -1,6 +1,11 @@
 package com.ruoyi.project.system.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.project.system.user.domain.AttachFileNumber;
+import com.ruoyi.project.system.user.service.IMainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +30,9 @@ public class IndexController extends BaseController
     @Autowired
     private RuoYiConfig ruoYiConfig;
 
+    @Autowired
+    private IMainService mainService;
+
     // 系统首页
     @GetMapping("/index")
     public String index(ModelMap mmap)
@@ -44,7 +52,14 @@ public class IndexController extends BaseController
     @GetMapping("/system/main")
     public String main(ModelMap mmap)
     {
-        mmap.put("version", ruoYiConfig.getVersion());
+        AttachFileNumber attachFileNumber = mainService.selectAttachFileNumber();
+        Map attrNameMap = new HashMap<String,Integer>();
+
+        attrNameMap.put("教师奖励信息",attachFileNumber.getAward());
+        attrNameMap.put("论文信息",attachFileNumber.getDocPaper());
+        attrNameMap.put("出版物信息",attachFileNumber.getPublication());
+
+        mmap.addAttribute("attrNameMap",attrNameMap);
         return "main";
     }
 }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.project.mapper.ProjectMapper">
+    
+    <resultMap type="Project" id="ProjectResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectLevel"    column="project_level"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="projectFunding"    column="project_funding"    />
+    </resultMap>
+	
+	<sql id="selectProjectVo">
+        select project_id, project_name, project_level, start_date, project_funding from sys_project
+    </sql>
+	
+    <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+             <if test="projectName != null  and projectName != '' "> and project_name = #{projectName}</if>
+             <if test="projectLevel != null "> and project_level = #{projectLevel}</if>
+             <if test="startDate != null "> and start_date = #{startDate}</if>
+             <if test="projectFunding != null "> and project_funding = #{projectFunding}</if>
+         </where>
+    </select>
+    
+    <select id="selectProjectById" parameterType="Integer" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        where project_id = #{projectId}
+    </select>
+        
+    <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="projectId">
+        insert into sys_project
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectName != null  and projectName != ''  ">project_name,</if>
+			<if test="projectLevel != null  ">project_level,</if>
+			<if test="startDate != null  ">start_date,</if>
+			<if test="projectFunding != null  ">project_funding,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectName != null  and projectName != ''  ">#{projectName},</if>
+			<if test="projectLevel != null  ">#{projectLevel},</if>
+			<if test="startDate != null  ">#{startDate},</if>
+			<if test="projectFunding != null  ">#{projectFunding},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateProject" parameterType="Project">
+        update sys_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null  and projectName != ''  ">project_name = #{projectName},</if>
+            <if test="projectLevel != null  ">project_level = #{projectLevel},</if>
+            <if test="startDate != null  ">start_date = #{startDate},</if>
+            <if test="projectFunding != null  ">project_funding = #{projectFunding},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+	<delete id="deleteProjectById" parameterType="Integer">
+        delete from sys_project where project_id = #{projectId}
+    </delete>
+	
+    <delete id="deleteProjectByIds" parameterType="String">
+        delete from sys_project where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+</mapper>

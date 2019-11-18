@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改发明专利')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-invention-edit">
+            <input id="inventionId" name="inventionId" th:value="${invention.inventionId}"  type="hidden">
+            <input id="attachFile" name="attachFile" th:value="${invention.attachFile}"  type="hidden">
+            <input id="firstInventorMajorId" th:value="${invention.firstInventorMajor.deptId}"  type="hidden">
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">发明名称：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"  th:text="${invention.inventionName}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发明状态：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"  th:text="${invention.inventionState}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">专利号：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"  th:text="${invention.patentNumber}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第一发明人：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"  th:text="${invention.firstInventor}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第一发明人专业：</label>
+				<div class="col-sm-8">
+					<div class="div-group">
+						<div class="form-control-static"  th:text="${invention.firstInventorMajor.deptName}"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他发明人：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"   th:text="${invention.otherInventor}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">专利权所有人：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"   th:text="${invention.patentRightBelongsTo}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">申请时间：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static" th:text="${#dates.format(invention.appliedDate,'yyyy-MM-dd')}" ></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">实审时间：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"  th:text="${#dates.format(invention.examDate,'yyyy-MM-dd')}"  ></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">授权公告日：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"  th:text="${#dates.format(invention.announcementDate,'yyyy-MM-dd')}" ></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">文件预览：</label>
+				<div class="col-sm-8">
+					<a class="btn btn-link btn-sm" th:onclick="'showFile(\'' + ${invention.inventionId} + '\');'"><i class="fa fa-file-pdf-o"></i>	预览文件</a>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<div class="form-control-static"   th:text="${invention.note}"></div>
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+<script type="text/javascript">
+	var prefix = ctx + "system/invention";
+
+	var modified = false;
+	$(function () {
+		initFilediv();
+	});
+
+	function showFile(inventionId) {
+		var url = "/system/invention/getAttachFile?inventionId=";
+		$.operate.pdfPreview(url+inventionId);
+	}
+</script>
+</body>
+</html>

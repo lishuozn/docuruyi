@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.award.mapper.AwardMapper">
+    
+    <resultMap type="Award" id="AwardResult">
+        <result property="awardId"    column="award_id"    />
+        <result property="awardName"    column="award_name"    />
+        <result property="firstWinner"    column="first_winner"    />
+        <result property="firstWinnerMajor"    column="first_winner_major"    />
+        <result property="secondWinner"    column="second_winner"    />
+        <result property="secondWinnerMajor"    column="second_winner_major"    />
+        <result property="thirdWinner"    column="third_winner"    />
+        <result property="thirdWinnerMajor"    column="third_winner_major"    />
+        <result property="firstDept"    column="first_dept"    />
+        <result property="workWithDept"    column="work_with_dept"    />
+        <result property="awardLeval"    column="award_leval"    />
+        <result property="awardFrom"    column="award_from"    />
+        <result property="awardNumber"    column="award_number"    />
+        <result property="awardDate"    column="award_date"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="note"    column="note"    />
+    </resultMap>
+
+    <!--自定义VO-->
+    <resultMap type="AwardVO" id="MyAwardVO">
+        <id property="awardId"    column="award_id"    />
+        <result property="awardName"    column="award_name"    />
+        <result property="firstWinner"    column="first_winner"    />
+        <result property="secondWinner"    column="second_winner"    />
+        <result property="thirdWinner"    column="third_winner"    />
+        <result property="firstDept"    column="first_dept"    />
+        <result property="workWithDept"    column="work_with_dept"    />
+        <result property="awardLeval"    column="award_leval"    />
+        <result property="awardFrom"    column="award_from"    />
+        <result property="awardNumber"    column="award_number"    />
+        <result property="awardDate"    column="award_date"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="note"    column="note"    />
+
+        <association property="firstWinnerMajor" column="first_winner_major"  javaType="Dept" resultMap="firstWinnerMajorResult" />
+        <association property="secondWinnerMajor" column="second_winner_major" javaType="Dept" resultMap="secondWinnerMajorResult"   />
+        <association property="thirdWinnerMajor" column="third_winner_major"  javaType="Dept" resultMap="thirdWinnerMajorResult"  />
+
+    </resultMap>
+
+
+    <resultMap id="firstWinnerMajorResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+    <resultMap id="secondWinnerMajorResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+    <resultMap id="thirdWinnerMajorResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+
+
+
+    <sql id="selectAwardVo">
+        select award_id, award_name, first_winner, first_winner_major, second_winner, second_winner_major, third_winner, third_winner_major,
+         first_dept, work_with_dept, award_leval, award_from, award_number, award_date, attach_file, note from sys_award
+    </sql>
+
+    <sql id="selectMyAwardVO">
+        select ad.award_id, ad.award_name, ad.first_winner, ad.first_winner_major, ad.second_winner, ad.second_winner_major, ad.third_winner, ad.third_winner_major,
+        ad.first_dept, ad.work_with_dept, ad.award_leval, ad.award_from, ad.award_number, ad.award_date, ad.attach_file, ad.note,
+
+        d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+        d2.dept_id, d2.parent_id, d2.dept_name, d2.order_num, d2.leader, d2.status as dept_status,
+        d3.dept_id, d3.parent_id, d3.dept_name, d3.order_num, d3.leader, d3.status as dept_status
+
+        from sys_award ad left join sys_dept d on first_winner_major = d.dept_id
+                                        left join sys_dept d2 on second_winner_major = d2.dept_id
+                                        left join sys_dept d3 on third_winner_major = d3.dept_id
+    </sql>
+
+
+    <select id="selectAwardList" parameterType="Award" resultMap="AwardResult">
+        <include refid="selectAwardVo"/>
+        <where>  
+            <if test="awardId != null "> and award_id = #{awardId}</if>
+             <if test="awardName != null  and awardName != '' "> and award_name = #{awardName}</if>
+             <if test="firstWinner != null  and firstWinner != '' "> and first_winner = #{firstWinner}</if>
+             <if test="firstWinnerMajor != null "> and first_winner_major = #{firstWinnerMajor}</if>
+             <if test="secondWinner != null  and secondWinner != '' "> and second_winner = #{secondWinner}</if>
+             <if test="secondWinnerMajor != null "> and second_winner_major = #{secondWinnerMajor}</if>
+             <if test="thirdWinner != null  and thirdWinner != '' "> and third_winner = #{thirdWinner}</if>
+             <if test="thirdWinnerMajor != null "> and third_winner_major = #{thirdWinnerMajor}</if>
+             <if test="firstDept != null  and firstDept != '' "> and first_dept = #{firstDept}</if>
+             <if test="workWithDept != null  and workWithDept != '' "> and work_with_dept = #{workWithDept}</if>
+             <if test="awardLeval != null "> and award_leval = #{awardLeval}</if>
+             <if test="awardFrom != null  and awardFrom != '' "> and award_from = #{awardFrom}</if>
+             <if test="awardNumber != null "> and award_number = #{awardNumber}</if>
+             <if test="awardDate != null "> and award_date = #{awardDate}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+             <if test="note != null  and note != '' "> and note = #{note}</if>
+         </where>
+    </select>
+    
+    <select id="selectAwardById" parameterType="Integer" resultMap="AwardResult">
+        <include refid="selectAwardVo"/>
+        where award_id = #{awardId}
+    </select>
+
+    <select id="selectAwardVOById" parameterType="Integer" resultMap="MyAwardVO">
+        <include refid="selectMyAwardVO"/>
+        where award_id = #{awardId}
+    </select>
+    <select id="selectAwardVOList" resultMap="MyAwardVO">
+        <include refid="selectMyAwardVO"/>
+        <where>
+            <if test="awardId != null "> and award_id = #{awardId}</if>
+            <if test="awardName != null  and awardName != '' "> and award_name = #{awardName}</if>
+            <if test="firstWinner != null  and firstWinner != '' "> and first_winner = #{firstWinner}</if>
+            <if test="firstWinnerMajor != null "> and first_winner_major = #{firstWinnerMajor}</if>
+            <if test="secondWinner != null  and secondWinner != '' "> and second_winner = #{secondWinner}</if>
+            <if test="secondWinnerMajor != null "> and second_winner_major = #{secondWinnerMajor}</if>
+            <if test="thirdWinner != null  and thirdWinner != '' "> and third_winner = #{thirdWinner}</if>
+            <if test="thirdWinnerMajor != null "> and third_winner_major = #{thirdWinnerMajor}</if>
+            <if test="firstDept != null  and firstDept != '' "> and first_dept = #{firstDept}</if>
+            <if test="workWithDept != null  and workWithDept != '' "> and work_with_dept = #{workWithDept}</if>
+            <if test="awardLeval != null "> and award_leval = #{awardLeval}</if>
+            <if test="awardFrom != null  and awardFrom != '' "> and award_from = #{awardFrom}</if>
+            <if test="awardNumber != null "> and award_number = #{awardNumber}</if>
+            <if test="awardDate != null "> and award_date = #{awardDate}</if>
+            <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+            <if test="note != null  and note != '' "> and note = #{note}</if>
+        </where>
+    </select>
+
+    <insert id="insertAward" parameterType="Award" useGeneratedKeys="true" keyProperty="awardId">
+        insert into sys_award
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="awardName != null  and awardName != ''  ">award_name,</if>
+			<if test="firstWinner != null  and firstWinner != ''  ">first_winner,</if>
+			<if test="firstWinnerMajor != null  ">first_winner_major,</if>
+			<if test="secondWinner != null  and secondWinner != ''  ">second_winner,</if>
+			<if test="secondWinnerMajor != null  ">second_winner_major,</if>
+			<if test="thirdWinner != null  and thirdWinner != ''  ">third_winner,</if>
+			<if test="thirdWinnerMajor != null  ">third_winner_major,</if>
+			<if test="firstDept != null  and firstDept != ''  ">first_dept,</if>
+			<if test="workWithDept != null  and workWithDept != ''  ">work_with_dept,</if>
+			<if test="awardLeval != null  ">award_leval,</if>
+			<if test="awardFrom != null  and awardFrom != ''  ">award_from,</if>
+			<if test="awardNumber != null  ">award_number,</if>
+			<if test="awardDate != null  ">award_date,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+			<if test="note != null  and note != ''  ">note,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="awardName != null  and awardName != ''  ">#{awardName},</if>
+			<if test="firstWinner != null  and firstWinner != ''  ">#{firstWinner},</if>
+			<if test="firstWinnerMajor != null  ">#{firstWinnerMajor},</if>
+			<if test="secondWinner != null  and secondWinner != ''  ">#{secondWinner},</if>
+			<if test="secondWinnerMajor != null  ">#{secondWinnerMajor},</if>
+			<if test="thirdWinner != null  and thirdWinner != ''  ">#{thirdWinner},</if>
+			<if test="thirdWinnerMajor != null  ">#{thirdWinnerMajor},</if>
+			<if test="firstDept != null  and firstDept != ''  ">#{firstDept},</if>
+			<if test="workWithDept != null  and workWithDept != ''  ">#{workWithDept},</if>
+			<if test="awardLeval != null  ">#{awardLeval},</if>
+			<if test="awardFrom != null  and awardFrom != ''  ">#{awardFrom},</if>
+			<if test="awardNumber != null  ">#{awardNumber},</if>
+			<if test="awardDate != null  ">#{awardDate},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+			<if test="note != null  and note != ''  ">#{note},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateAward" parameterType="Award">
+        update sys_award
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="awardName != null  and awardName != ''  ">award_name = #{awardName},</if>
+            <if test="firstWinner != null  and firstWinner != ''  ">first_winner = #{firstWinner},</if>
+            <if test="firstWinnerMajor != null  ">first_winner_major = #{firstWinnerMajor},</if>
+            <if test="secondWinner != null  and secondWinner != ''  ">second_winner = #{secondWinner},</if>
+            <if test="secondWinnerMajor != null  ">second_winner_major = #{secondWinnerMajor},</if>
+            <if test="thirdWinner != null  and thirdWinner != ''  ">third_winner = #{thirdWinner},</if>
+            <if test="thirdWinnerMajor != null  ">third_winner_major = #{thirdWinnerMajor},</if>
+            <if test="firstDept != null  and firstDept != ''  ">first_dept = #{firstDept},</if>
+            <if test="workWithDept != null  and workWithDept != ''  ">work_with_dept = #{workWithDept},</if>
+            <if test="awardLeval != null  ">award_leval = #{awardLeval},</if>
+            <if test="awardFrom != null  and awardFrom != ''  ">award_from = #{awardFrom},</if>
+            <if test="awardNumber != null  ">award_number = #{awardNumber},</if>
+            <if test="awardDate != null  ">award_date = #{awardDate},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+            <if test="note != null  and note != ''  ">note = #{note},</if>
+        </trim>
+        where award_id = #{awardId}
+    </update>
+
+	<delete id="deleteAwardById" parameterType="Integer">
+        delete from sys_award where award_id = #{awardId}
+    </delete>
+	
+    <delete id="deleteAwardByIds" parameterType="String">
+        delete from sys_award where award_id in 
+        <foreach item="awardId" collection="array" open="(" separator="," close=")">
+            #{awardId}
+        </foreach>
+    </delete>
+    
+</mapper>

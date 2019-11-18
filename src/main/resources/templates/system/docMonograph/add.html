@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增专著')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-docMonograph-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>专著名称：</label>
+				<div class="col-sm-8">
+					<input id="monographName" name="monographName" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>作者id-备用：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>一作名字：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>一作专业：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input id="author1MajorId" type="text" placeholder="请选择专业" class="form-control authorMajor" required>
+						<input hidden name="author1MajorId" type="text" class="author1MajorId">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作名字：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">二作专业：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input id="author2MajorId" type="text" placeholder="请选择专业" class="form-control authorMajor">
+						<input hidden name="author2MajorId" type="text" class="author2MajorId">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>出版社名称：</label>
+				<div class="col-sm-8">
+					<input id="pressName" name="pressName" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>出版时间：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input id="publishDate" name="publishDate" type="text" class="form-control time-input"  required>
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>出版社级别：</label>
+				<div class="col-sm-8">
+					<input id="pressLevel" name="pressLevel" class="form-control" type="text" required>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">附件：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="attachFile" name="attachFile" class="form-control" type="file" data-preview-file-type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+
+				<!--<p id="message" style="color: red"><label class="error" for="pressLevel"><i class="fa fa-times-circle"></i>必填</label></p>-->
+				<!--
+				<div class="col-sm-8">
+					<input id="attachFile" name="attachFile" class="form-control" type="text">
+				</div>
+				-->
+				<div class="col-sm-8">
+
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div id="message"><label id="attachFile-error" class="error" for="attachFile"></label></div>
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+
+										<div class="file-loading">
+											<input id="attachFile"  name="attachFile" type="file" class="form-control" multiple>
+
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!--
+				<div class="form-group">
+					<label class="font-noraml">附件上传（支持多文件）</label>
+					<div class="file-loading">
+						<input id="attachFile" name="attachFile" type="file" multiple>
+					</div>
+				</div>
+				-->
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+		var prefix = ctx + "system/docMonograph"
+
+		$("#form-docMonograph-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		var temp = 0;
+		function submitHandler() {
+            // alert('temp:'+temp);
+            if ($('#attachFile')[0].files[0]== null) {
+                if(temp != 1){
+                    $.modal.alertWarning("请先选择文件路径");
+                    return false;
+				}
+
+
+
+            }
+            // if ($("#attachFile").val() == null||$("#attachFile").val() == ""){
+            // 	$("#message").attr("style","display:show();")
+            // }
+            if ($.validate.form()) {
+                if ($('#attachFile')[0].files[0] != null) {
+
+                    $.modal.alertWarning("请将文件上传");
+                    return false;
+                }
+                    $.operate.save(prefix + "/add", $('#form-docMonograph-add').serialize());
+            }
+
+
+	    }
+
+        var currentTreeName = "";
+        $(".authorMajor").click(function () {
+            currentTreeName = $(this).attr("id");
+            var treeId = $("#treeId").val();
+            var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + deptId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        });
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                // alert("选择的是"+body.find('#treeId').val());
+                $("#"+currentTreeName).val(body.find('#treeName').val())
+                var authorMajor = $("input."+currentTreeName);
+                authorMajor.val(body.find('#treeId').val());
+                // alert("框中的内容为"+$('#author1MajorId').val());
+                layer.close(index);
+            }
+        }
+
+        $("#attachFile").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': prefix+'/addFile',
+            overwriteInitial: false,
+            initialPreviewAsData: true,
+            // success:function (data) {
+            //
+            //     temp = 1;
+            //     alert("temp"+temp);
+            //     // alert(data)
+            // },
+            // error:function (data) {
+				// alert("error");
+            // }
+            /*
+            initialPreview: [
+                "/img/profile.jpg"
+            ]
+            */
+        }).on("fileuploaded",function (event, data, previewId, index) {
+            temp = 1;
+			// alert('success')
+        });
+	</script>
+</body>
+</html>

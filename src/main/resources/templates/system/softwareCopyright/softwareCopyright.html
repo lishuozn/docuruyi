@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('软件著作权列表')" />
+	<th:block th:include="include :: layout-latest-css" />
+	<th:block th:include="include :: ztree-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								软件著作权名称：<input type="text" name="copyrightName"/>
+							</li>
+
+							<li>
+								登记号：<input type="text" name="registrationId"/>
+							</li>
+
+							<li>
+								第一著作权人：<input type="text" name="firstCopyrightOwner"/>
+							</li>
+
+							<li>
+								第一著作权人专业：<input type="text" name="firstCopyrightOwnerMajorId"/>
+							</li>
+
+							<li>
+								其他著作权人：<input type="text" name="otherCopyrightOwner"/>
+							</li>
+
+							<li class="select-time">
+								<label>并发完成时间： </label>
+								<input type="text" class="time-input" id="startConcurrentCompletionDate" placeholder="开始" name="params[beginConcurrentCompletionDate]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endConcurrentCompletionDate" placeholder="结束" name="params[endConcurrentCompletionDate]"/>
+							</li>
+							<li class="select-time">
+								<label>登记时间： </label>
+								<input type="text" class="time-input" id="startRegistrationDate" placeholder="开始" name="params[beginRegistrationDate]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endRegistrationDate" placeholder="结束" name="params[endRegistrationDate]"/>
+							</li>
+							<li>
+								附件：<input type="text" name="attachFile"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:softwareCopyright:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:softwareCopyright:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:softwareCopyright:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:softwareCopyright:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<a class="btn btn-info" onclick="$.table.multiDownloadFile('softwareCopyright','copyrightId')" shiro:hasPermission="system:softwareCopyright:export">
+					<i class="fa fa-download"></i> 附件下载
+				</a>
+
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.detail()" shiro:hasPermission="system:softwareCopyright:export">
+					<i class="fa fa-search"></i> 详细
+				</a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"
+					   data-use-row-attr-func="true"
+					   data-reorderable-rows="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+	 <th:block th:include="include :: bootstrap-table-reorder-js" />
+	 <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:softwareCopyright:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:softwareCopyright:remove')}]];
+        var prefix = ctx + "system/softwareCopyright";
+        var getFileUrl = 'system/softwareCopyright/softwareCopyright?sCId=';
+        var reorderUrl = prefix + "/reorderList";
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                detailUrl: prefix + "/detail/{id}",
+                id:"bootstrap-table",
+                modalName: "软件著作权",
+		        showExport: true,
+                onReorderRow: function (data) {
+                    //当拖拽结束后，data为整个表格的数据
+
+                    // $('#bootstrap-table').bootstrapTable('load', data);
+                    $.post(reorderUrl,
+                        {
+                            jsonData: JSON.stringify(data) },//将整张表数据Post，当然，先序列化成Json
+                        function(data) {
+                            if (data != null) {
+                                $.table.refresh();
+                            }
+                        });
+                    // console.log('拖拽结束' + JSON.stringify(data));
+                    return false;
+                },
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'copyrightId', 
+					title : '软件著作权Id',
+					visible: false
+				},
+				{
+					field : 'copyrightName', 
+					title : '软件著作权名称',
+					sortable: true
+				},
+				{
+					field : 'registrationId', 
+					title : '登记号',
+					sortable: true
+				},
+				{
+					field : 'firstCopyrightOwner', 
+					title : '第一著作权人',
+					sortable: true
+				},
+				{
+					field : 'firstCopyrightOwnerMajorId', 
+					title : '第一著作权人专业',
+					sortable: true
+				},
+				{
+					field : 'otherCopyrightOwner', 
+					title : '其他著作权人',
+					sortable: true
+				},
+				{
+					field : 'concurrentCompletionDate', 
+					title : '并发完成时间',
+					sortable: true
+				},
+				{
+					field : 'registrationDate', 
+					title : '登记时间',
+					sortable: true
+				},
+				{
+					field : 'attachFile', 
+					title : '附件',
+					sortable: true,
+					visible:false
+				},
+				{
+					field : 'attachFileSet',
+					title : '附件操作',
+					sortable: true,
+					formatter: function(value, row, index) {
+
+						// alert(index);
+						var actions = [];
+						var tempUrl = getFileUrl+row.copyrightId;
+                        var tt = "softwareCopyright";
+                        actions.push('<a class="btn btn-success btn-xs" shiro:hasPermission="system:softwareCopyright:softwareCopyright" onclick="$.operate.pdfPreview(\''+tempUrl+'\')"><i class="fa fa-file-pdf-o"></i> 预览</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs" shiro:hasPermission="system:softwareCopyright:softwareCopyright" onclick="$.operate.downloadFile(\''+tt+'\',\'' +row.copyrightId + '\')"><i class="fa fa-download"></i>下载</a>');
+						return actions.join('');
+					}
+				},
+		        {
+		            title: '内容操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.copyrightId + '\')"><i class="fa fa-search"></i>详细</a> ');
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.copyrightId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.copyrightId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        function downloadFile(copyrightId){
+            window.location.href = ctx + "system/softwareCopyright/downloadFile/" + copyrightId;
+        }
+        //批量下载
+        function batchDownload() {
+            var index= $.table.getIdSelections();
+            // alert(index);
+            var  attachFile= $.table.selectColumns('attachFile');
+            var  ids= $.table.selectColumns('copyrightId');
+            // alert(ids.length);
+            window.location.href = ctx + "system/softwareCopyright/downloadFile/batchDownload?attachFile="+attachFile + "&column="+index+"&copyrightId="+ids;
+        };
+    </script>
+</body>
+</html>

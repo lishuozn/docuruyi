@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.teachingSubject.mapper.TeachingSubjectMapper">
+    
+    <resultMap type="TeachingSubject" id="TeachingSubjectResult">
+        <result property="subjectId"    column="subject_id"    />
+        <result property="subjectName"    column="subject_name"    />
+        <result property="subjectLevel"    column="subject_level"    />
+        <result property="moderator"    column="moderator"    />
+        <result property="modMajorId"    column="mod_major_id"    />
+        <result property="modParticipant"    column="mod_participant"    />
+        <result property="firstUnit"    column="first_unit"    />
+        <result property="projectDate"    column="project_date"    />
+        <result property="grants"    column="grants"    />
+        <result property="arrivalAmount"    column="arrival_amount"    />
+        <result property="concludingDate"    column="concluding_date"    />
+        <result property="projectSource"    column="project_source"    />
+        <result property="isFinished"    column="is_finished"    />
+        <result property="isFinishedOnTime"    column="is_finished_on_time"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+        <association property="major"    column="mod_major_id" javaType="Dept"  select="com.ruoyi.project.system.teachingSubject.mapper.TeachingSubjectMapper.selectMajor"/>
+    </resultMap>
+
+
+    <resultMap id="deptResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+
+    <resultMap type="TeachingSubjectForFileNameConfig" id="TeachingSubjectForFileNameConfigResult">
+        <result property="subjectId"    column="subject_id"    />
+        <result property="subjectName"    column="subject_name"    />
+        <result property="subjectLevel"    column="subject_level"    />
+        <result property="moderator"    column="moderator"    />
+        <result property="modMajorId"    column="mod_major_id"    />
+        <result property="modParticipant"    column="mod_participant"    />
+        <result property="firstUnit"    column="first_unit"    />
+        <result property="projectDate"    column="project_date"    />
+        <result property="grants"    column="grants"    />
+        <result property="arrivalAmount"    column="arrival_amount"    />
+        <result property="concludingDate"    column="concluding_date"    />
+        <result property="projectSource"    column="project_source"    />
+        <result property="isFinished"    column="is_finished"    />
+        <result property="isFinishedOnTime"    column="is_finished_on_time"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+    </resultMap>
+
+	<sql id="selectTeachingSubjectVo">
+        select subject_id, subject_name, subject_level, moderator, mod_major_id, mod_participant, first_unit, project_date, grants, arrival_amount, concluding_date, project_source, is_finished, is_finished_on_time, attach_file, notes from sys_teaching_subject
+    </sql>
+    <select id="selectMajor" parameterType="string" resultMap="deptResult">
+        select dept_name,leader from sys_dept where #{mod_major_id} = dept_id
+    </select>
+    <select id="selectTeachingSubjectList" parameterType="TeachingSubject" resultMap="TeachingSubjectResult">
+        <include refid="selectTeachingSubjectVo"/>
+        <where>  
+            <if test="subjectId != null "> and subject_id = #{subjectId}</if>
+             <if test="subjectName != null  and subjectName != '' "> and subject_name = #{subjectName}</if>
+             <if test="subjectLevel != null "> and subject_level = #{subjectLevel}</if>
+             <if test="moderator != null  and moderator != '' "> and moderator = #{moderator}</if>
+             <if test="modMajorId != null "> and mod_major_id = #{modMajorId}</if>
+             <if test="modParticipant != null  and modParticipant != '' "> and mod_participant = #{modParticipant}</if>
+             <if test="firstUnit != null  and firstUnit != '' "> and first_unit = #{firstUnit}</if>
+             <if test="projectDate != null "> and project_date = #{projectDate}</if>
+             <if test="grants != null "> and grants = #{grants}</if>
+             <if test="arrivalAmount != null "> and arrival_amount = #{arrivalAmount}</if>
+             <if test="concludingDate != null "> and concluding_date = #{concludingDate}</if>
+             <if test="projectSource != null  and projectSource != '' "> and project_source = #{projectSource}</if>
+             <if test="isFinished != null "> and is_finished = #{isFinished}</if>
+             <if test="isFinishedOnTime != null "> and is_finished_on_time = #{isFinishedOnTime}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+             <if test="notes != null  and notes != '' "> and notes = #{notes}</if>
+         </where>
+    </select>
+    
+    <select id="selectTeachingSubjectById" parameterType="Integer" resultMap="TeachingSubjectResult">
+        <include refid="selectTeachingSubjectVo"/>
+        where subject_id = #{subjectId}
+    </select>
+        
+    <insert id="insertTeachingSubject" parameterType="TeachingSubject" useGeneratedKeys="true" keyProperty="subjectId">
+        insert into sys_teaching_subject
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="subjectName != null  and subjectName != ''  ">subject_name,</if>
+			<if test="subjectLevel != null  ">subject_level,</if>
+			<if test="moderator != null  and moderator != ''  ">moderator,</if>
+			<if test="modMajorId != null  ">mod_major_id,</if>
+			<if test="modParticipant != null  and modParticipant != ''  ">mod_participant,</if>
+			<if test="firstUnit != null  and firstUnit != ''  ">first_unit,</if>
+			<if test="projectDate != null  ">project_date,</if>
+			<if test="grants != null  ">grants,</if>
+			<if test="arrivalAmount != null  ">arrival_amount,</if>
+			<if test="concludingDate != null  ">concluding_date,</if>
+			<if test="projectSource != null  and projectSource != ''  ">project_source,</if>
+			<if test="isFinished != null  ">is_finished,</if>
+			<if test="isFinishedOnTime != null  ">is_finished_on_time,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+			<if test="notes != null  and notes != ''  ">notes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="subjectName != null  and subjectName != ''  ">#{subjectName},</if>
+			<if test="subjectLevel != null  ">#{subjectLevel},</if>
+			<if test="moderator != null  and moderator != ''  ">#{moderator},</if>
+			<if test="modMajorId != null  ">#{modMajorId},</if>
+			<if test="modParticipant != null  and modParticipant != ''  ">#{modParticipant},</if>
+			<if test="firstUnit != null  and firstUnit != ''  ">#{firstUnit},</if>
+			<if test="projectDate != null  ">#{projectDate},</if>
+			<if test="grants != null  ">#{grants},</if>
+			<if test="arrivalAmount != null  ">#{arrivalAmount},</if>
+			<if test="concludingDate != null  ">#{concludingDate},</if>
+			<if test="projectSource != null  and projectSource != ''  ">#{projectSource},</if>
+			<if test="isFinished != null  ">#{isFinished},</if>
+			<if test="isFinishedOnTime != null  ">#{isFinishedOnTime},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+			<if test="notes != null  and notes != ''  ">#{notes},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTeachingSubject" parameterType="TeachingSubject">
+        update sys_teaching_subject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subjectName != null  and subjectName != ''  ">subject_name = #{subjectName},</if>
+            <if test="subjectLevel != null  ">subject_level = #{subjectLevel},</if>
+            <if test="moderator != null  and moderator != ''  ">moderator = #{moderator},</if>
+            <if test="modMajorId != null  ">mod_major_id = #{modMajorId},</if>
+            <if test="modParticipant != null  and modParticipant != ''  ">mod_participant = #{modParticipant},</if>
+            <if test="firstUnit != null  and firstUnit != ''  ">first_unit = #{firstUnit},</if>
+            <if test="projectDate != null  ">project_date = #{projectDate},</if>
+            <if test="grants != null  ">grants = #{grants},</if>
+            <if test="arrivalAmount != null  ">arrival_amount = #{arrivalAmount},</if>
+            <if test="concludingDate != null  ">concluding_date = #{concludingDate},</if>
+            <if test="projectSource != null  and projectSource != ''  ">project_source = #{projectSource},</if>
+            <if test="isFinished != null  ">is_finished = #{isFinished},</if>
+            <if test="isFinishedOnTime != null  ">is_finished_on_time = #{isFinishedOnTime},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+            <if test="notes != null  and notes != ''  ">notes = #{notes},</if>
+        </trim>
+        where subject_id = #{subjectId}
+    </update>
+
+	<delete id="deleteTeachingSubjectById" parameterType="Integer">
+        delete from sys_teaching_subject where subject_id = #{subjectId}
+    </delete>
+	
+    <delete id="deleteTeachingSubjectByIds" parameterType="String">
+        delete from sys_teaching_subject where subject_id in 
+        <foreach item="subjectId" collection="array" open="(" separator="," close=")">
+            #{subjectId}
+        </foreach>
+    </delete>
+    <delete id="deleteAllTeachingSubject">
+        delete from sys_teaching_subject
+    </delete>
+    <select id="selectListForFileNameConfig" resultMap="TeachingSubjectForFileNameConfigResult">
+        select subject_id,subject_name,
+        (select dict_label from sys_dict_data where dict_type = 'sys_teaching_topic_level' and subject_level= dict_value)subject_level,
+        moderator,
+        (select dept_name from sys_dept where dept_id = mod_major_id)mod_major_id,
+        mod_participant,first_unit,project_date,project_source,grants,arrival_amount,concluding_date,
+        (select dict_label from sys_dict_data where dict_type = 'sys_teaching_subject_is_finished' and is_finished= dict_value)is_finished,
+        (select dict_label from sys_dict_data where dict_type = 'sys_teaching_subject_is_finished_on_time' and is_finished_on_time= dict_value)is_finished_on_time,
+        attach_file, notes
+        from sys_teaching_subject
+        WHERE
+        <foreach collection="list" index="index" item="subjectId" open=""
+                 separator="or" close="">
+            subject_id = #{subjectId}
+        </foreach>
+    </select>
+</mapper>

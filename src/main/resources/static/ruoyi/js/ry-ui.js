@@ -261,6 +261,30 @@
 	    			});
     			});
     		},
+            //多选下载文件格式
+            multiDownloadFile:function(temp,Id){
+                // alert("temp:"+temp);
+                // alert("Id:"+Id);
+                var index= $.table.getIdSelections();
+                // alert(index);
+                var  attachFile= $.table.selectColumns('attachFile');
+                var  ids= $.table.selectColumns(Id);
+                // alert("ids:"+ids.length);
+                if (ids.length >= 2){
+                    $.modal.multiDownloadConfirm("请您选择下载格式？", function() {
+                            // alert("单个文件单独下载");
+                            // alert(ids.length);
+                            window.location.href = ctx + "system/"+temp+"/downloadFile/batchDownload?attachFile="+attachFile + "&column="+index+"&"+Id+"="+ids;
+                        },
+                        function () {
+                            // alert("合并下载");
+                            // alert(temp);
+                            window.location.href = ctx + "system/"+temp+"/downloadFile/mergeDownload?attachFile="+attachFile + "&column="+index+"&"+Id+"="+ids;
+                        });
+                } else {
+                    window.location.href = ctx + "system/"+temp+"/downloadFile/batchDownload?attachFile="+attachFile + "&column="+index+"&"+Id+"="+ids;
+                }
+            },
     		// 下载模板
     		importTemplate: function() {
     			$.get($.table._option.importTemplateUrl, function(result) {
@@ -569,6 +593,36 @@
         	        callBack(true);
         	    });
             },
+			//多选下载窗体
+            multiDownloadConfirm: function (content, callBack,callBack2) {
+                layer.confirm(content, {
+                    icon: 3,
+                    title: "系统提示",
+                    btn: ['单文件下载', '合并下载']
+                }, function (index) {
+                    layer.close(index);
+                    callBack(true);
+                },
+					function (index) {
+						layer.close(index);
+                        callBack2(true);
+                    });
+            },
+			//单选下载窗体
+            downloadConfirm: function (content, callBack,callBack2) {
+                layer.confirm(content, {
+                    icon: 3,
+                    title: "系统提示",
+                    btn: ['整本下载', '分页下载']
+                }, function (index) {
+                    layer.close(index);
+                    callBack(true);
+                },
+					function (index) {
+						layer.close(index);
+                        callBack2(true);
+                    });
+            },
             // 弹出层指定宽度
             open: function (title, url, width, height, callback) {
             	//如果是移动端，就使用自适应大小弹窗
@@ -760,6 +814,17 @@
        			};
             	$.modal.openOptions(options);
             },
+            //单选下载文件格式
+            downloadFile:function(temp,Id){
+                $.modal.downloadConfirm("请您选择下载格式？", function() {
+                        // alert("整本下载");
+                        window.location.href = ctx + "system/"+temp+"/downloadFile/" + Id;
+                    },
+                    function () {
+                        // alert("分页下载");
+                        window.location.href = ctx + "system/"+temp+"/downloadSplitFile/" + Id;
+                    });
+            },
             // 详细访问地址
             detailUrl: function(id) {
             	var url = "/404.html";
@@ -871,6 +936,36 @@
                 return url;
             },
             /**
+             * @author：lishengqi
+             * 功能：封装的预览pdf文件方法
+             * 2019年08月06日22:32:50
+             */
+            pdfPreview: function(pbId) {
+                var fileName="";
+                $.ajax({
+                    type: "get",
+                    url: ctx + pbId,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.code == web_status.SUCCESS) {
+                            fileName += result.data;
+                            url ='/profile/upload/'+fileName;
+                            if($.common.isNotEmpty(url)){
+                                $.modal.open("文件预览", ctx + "system/pdf/pdfViewer?file="+url,800,600);
+                            }
+                        } else {
+                            $.modal.alertError(result.msg);
+                        }
+                    },
+                    error: function(error) {
+                        $.modal.alertWarning("文档加载失败。");
+                    }
+                });
+            },
+            /**
              * @author：yelihu
              * 功能：封装的预览pdf文件方法
              * 2019年08月06日22:32:50
@@ -905,31 +1000,31 @@
              * 功能：封装的预览pdf文件方法
              * 2019年08月06日22:32:50
              */
-            pdfPreview: function(pbId) {
-                var fileName="";
-                $.ajax({
-                    type: "get",
-                    url: ctx + pbId,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.code == web_status.SUCCESS) {
-                            fileName += result.data;
-                            url ='/profile/upload/'+fileName;
-                            if($.common.isNotEmpty(url)){
-                                $.modal.open("文件预览", ctx + "system/pdf/pdfViewer?file="+url,800,600);
-                            }
-                        } else {
-                            $.modal.alertError(result.msg);
-                        }
-                    },
-                    error: function(error) {
-                        $.modal.alertWarning("文档加载失败。");
-                    }
-                });
-            },
+            // pdfPreview: function(pbId) {
+            //     var fileName="";
+            //     $.ajax({
+            //         type: "get",
+            //         url: ctx + "system/docPaper"+"/docPaper?pbId="+pbId,
+            //         cache: false,
+            //         contentType: false,
+            //         processData: false,
+            //         dataType: 'json',
+            //         success: function(result) {
+            //             if (result.code == web_status.SUCCESS) {
+            //                 fileName += result.data;
+            //                 url ='/profile/upload/'+fileName;
+            //                 if($.common.isNotEmpty(url)){
+            //                     $.modal.open("文件预览", ctx + "system/pdf/pdfViewer?file="+url,800,600);
+            //                 }
+            //             } else {
+            //                 $.modal.alertError(result.msg);
+            //             }
+            //         },
+            //         error: function(error) {
+            //             $.modal.alertWarning("文档加载失败。");
+            //         }
+            //     });
+            // },
             // 保存信息 刷新表格
             save: function(url, data, callback) {
             	var config = {

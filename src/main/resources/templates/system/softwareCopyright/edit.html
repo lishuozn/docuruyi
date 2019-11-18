@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改软件著作权')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-softwareCopyright-edit" th:object="${softwareCopyright}">
+            <input id="copyrightId" name="copyrightId" th:field="*{copyrightId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">软件著作权名称：</label>
+				<div class="col-sm-8">
+					<input id="copyrightName" name="copyrightName" th:field="*{copyrightName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">登记号：</label>
+				<div class="col-sm-8">
+					<input id="registrationId" name="registrationId" th:field="*{registrationId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第一著作权人：</label>
+				<div class="col-sm-8">
+					<input id="firstCopyrightOwner" name="firstCopyrightOwner" th:field="*{firstCopyrightOwner}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第一著作权人专业：</label>
+				<div class="col-sm-8">
+					<input id="firstCopyrightOwnerMajorId" name="firstCopyrightOwnerMajorId" th:field="*{major.deptName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他著作权人：</label>
+				<div class="col-sm-8">
+					<input id="otherCopyrightOwner" name="otherCopyrightOwner" th:field="*{otherCopyrightOwner}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">并发完成时间：</label>
+				<div class="col-sm-8">
+					<input id="concurrentCompletionDate"  name="concurrentCompletionDate" th:value="*{#dates.format(concurrentCompletionDate, 'yyyy-MM-dd')}" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">登记时间：</label>
+				<div class="col-sm-8">
+					<input id="registrationDate"  name="registrationDate" th:value="*{#dates.format(registrationDate, 'yyyy-MM-dd')}" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">附件：</label>
+				<!--<div class="col-sm-8">-->
+					<!--<input id="attachFile" name="attachFile" th:field="*{attachFile}" class="form-control" type="text">-->
+				<!--</div>-->
+				<div class="col-sm-8">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="attachFile"  name="attachFile" class="form-control" type="file" multiple>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+	<script th:inline="javascript" type="text/javascript">
+		var prefix = ctx + "system/softwareCopyright";
+		$("#form-softwareCopyright-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                if ($('#attachFile')[0].files[0] != null) {
+
+                    $.modal.alertWarning("请将文件上传");
+                    return false;
+                }
+	            $.operate.save(prefix + "/edit", $('#form-softwareCopyright-edit').serialize());
+	        }
+	    }
+        var filename = [[${softwareCopyright.attachFile}]];
+        $(document).ready(function () {
+            $('#attachFile').fileinput({
+                uploadUrl: prefix+'/updateFile',
+                layoutTemplates:{
+                    actionUpload: ''
+                },
+                pdfRendererUrl: 'https://plugins.krajee.com/pdfjs/web/viewer.html',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    "/profile/upload/"+filename
+                ],
+                initialPreviewConfig: [
+                    {type: 'pdf', size: 307200}
+                ]
+
+            });
+        });
+	</script>
+</body>
+</html>

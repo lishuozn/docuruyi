@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+	<th:block th:include="include :: header('教材/出版物详细')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-publication-edit">
+
+            <input id="pbId" name="pbId" th:value="${publication.pbId}"  type="hidden">
+			
+			<input name="deptId" id="treeId" type="hidden"  th:value="${publication.author1Major.deptId}" />
+
+			<input name="dept2Id" id="tree2Id" type="hidden"  th:value="${publication.author1Major.deptId}" />
+			
+			<input id="attachFile" type="hidden"  th:value="${publication.attachFile}" />
+			
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">类别：</label>
+				<div class="col-sm-8">
+					<div class="col-sm-8">
+						<div class="form-control-static" th:text="${publication.pbKind}"></div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">题目：</label>
+				<div class="col-sm-8">
+					<input id="pbTitle" name="pbTitle" th:value="${publication.pbTitle}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者编号：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" th:value="${publication.author1Id}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者姓名：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" th:value="${publication.author1Name}" class="form-control" readonly type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者所在专业：</label>
+				<div class="col-sm-8">
+						<input name="author1MajorId" readonly th:value="${publication.author1Major.deptName}"  id="treeName" type="text" placeholder="请选择专业" class="form-control authorMajor" required>
+
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者编号：</label>
+				<div class="col-sm-8">
+					<input id="author2Id" name="author2Id" th:value="${publication.author2Id}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者姓名：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" th:value="${publication.author2Name}" class="form-control" readonly type="text">
+				</div>
+			</div>
+
+
+			<!--部门树-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者所在专业：</label>
+				<div class="col-sm-8">
+						<input name="author2MajorId" th:value="${publication.author2Major.deptName}" id="treeName_author2" type="text" placeholder="请选择专业" class="form-control authorMajor" readonly required>
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" th:value="${publication.authorNameOther}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">期刊名字：</label>
+				<div class="col-sm-8">
+					<input id="publisherName" name="publisherName" th:value="${publication.publisherName}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">刊号：</label>
+				<div class="col-sm-8">
+					<input id="publishNumber" name="publishNumber" th:value="${publication.publishNumber}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">出版社级别：</label>
+				<div class="col-sm-8">
+					<input id="publisherLevel" name="publisherLevel" th:value="${publication.publisherLevel}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">出版时间：</label>
+				<div class="col-sm-8">
+					<input id="publishDate" name="publishDate" th:value="${#dates.format(publication.publishDate,'yyyy-MM-dd')}" class="time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">ISSN编号：</label>
+				<div class="col-sm-8">
+					<input id="issnNumber" name="issnNumber" th:value="${publication.issnNumber}" class="form-control" readonly type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">附件预览：</label>
+				<div class="col-sm-8">
+					<a class="btn btn-link btn-sm" shiro:hasPermission="system:publication:publication" th:onclick="'showFile(\'' + *{pbId} + '\');'"><i class="fa fa-file-pdf-o"></i>	预览文件</a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" th:value="${publication.notes}" class="form-control" readonly type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+
+	<script th:inline="javascript" type="text/javascript">
+
+		var prefix = ctx + "system/publication";
+		var modified = false;
+
+		function showFileInput(){
+			if(modified){
+				modified = false;
+				$("#fileInput").addClass("hidden");
+				$("#modifyBtn").text("点击修改");
+			}else{
+				modified=true;
+				$("#fileInput").removeClass("hidden");
+				$("#modifyBtn").text("取消修改");
+			}
+		}
+		function showFile(pbId) {
+			var url = "/system/publication/getAttachFile?pbId=";
+			$.operate.pdfPreview(url+pbId);
+		}
+
+
+	</script>
+</body>
+</html>

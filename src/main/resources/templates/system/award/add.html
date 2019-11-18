@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增教师奖励')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+		<input name="deptId" type="hidden" id="firstWinnerMajorId"/>
+		<input name="deptId" type="hidden" id="secondWinnerMajorId"/>
+		<input name="deptId" type="hidden" id="thirdWinnerMajorId"/>
+
+        <form class="form-horizontal m" id="form-award-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>奖励名称：</label>
+				<div class="col-sm-8">
+					<input id="awardName" name="awardName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一完成人：</label>
+				<div class="col-sm-8">
+					<input id="firstWinner" name="firstWinner" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一作者所在专业：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input  onclick="selectDeptTree(1)"  id="1"  name="firstWinnerMajor" type="text" placeholder="请选择专业" class="form-control winnerMajor" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第二完成人：</label>
+				<div class="col-sm-8">
+					<input id="secondWinner" name="secondWinner" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者所在专业：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input onclick="selectDeptTree(2)"  name="secondWinnerMajor" id="2" type="text" placeholder="请选择专业" class="form-control winnerMajor">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">第三获奖人：</label>
+				<div class="col-sm-8">
+					<input id="thirdWinner" name="thirdWinner" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第三作者所在专业：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input onclick="selectDeptTree(3)"  name="thirdWinnerMajor" id="3" type="text" placeholder="请选择专业" class="form-control winnerMajor">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一单位：</label>
+				<div class="col-sm-8">
+					<input id="firstDept" name="firstDept" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">合作单位：</label>
+				<div class="col-sm-8">
+					<input id="workWithDept" name="workWithDept" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>奖励级别：</label>
+				<div class="col-sm-8">
+					<select name="awardLeval" id="awardLeval" class="form-control m-b" th:with="type=${@dict.getType('sys_award_leval')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>颁发单位：</label>
+				<div class="col-sm-8">
+					<input id="awardFrom" name="awardFrom" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>奖励等级：</label>
+				<div class="col-sm-8">
+					<select name="awardNumber" id="awardNumber" class="form-control m-b" th:with="type=${@dict.getType('sys_award_number')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span><span style="color: red; ">*</span>奖励时间：</label>
+				<div class="col-sm-8">
+					<input id="awardDate" name="awardDate" class="time-input" type="text">
+				</div>
+			</div>
+			<!--文件上传-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+				<div class="col-sm-8">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="file" name="file" class="form-control" type="file" multiple>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<textarea id="note" style="max-width: 100%;min-height:75px;max-height: 200px;" name="note" class="form-control" type="text"></textarea>
+
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+		var prefix = ctx + "system/award";
+		$(function () {
+			$("#file").fileinput({
+				'theme': 'explorer-fas',
+				'uploadUrl':'#',
+				pdfRendererUrl: 'https://plugins.krajee.com/pdfjs/web/viewer.html',
+				overwriteInitial: false,
+				initialPreviewAsData: true,
+				maxFileCount: 1,
+				showUpload:false,
+				layoutTemplates:{
+					actionUpload: '',
+				},
+				initialPreviewConfig: [
+					{type: 'pdf', size: 3072}
+				]
+			});
+		});
+		$("#form-award-add").validate({
+			onkeyup: false,
+			rules:{
+				awardName:{
+					minlength: 2,
+					maxlength: 50,
+					required:true,
+				},
+				firstWinner:{
+					required:true,
+				},
+				firstWinnerMajor:{
+					required:true,
+				},
+				firstDept:{
+					minlength: 2,
+					maxlength: 20,
+					required:true,
+				},
+				awardDate:{
+					dateISO:true,
+					required:true,
+				},
+				awardFrom:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+		//添加奖励信息 流程控制
+		function submitHandler() {
+	        if ($.validate.form()) {
+				if ($('#file')[0].files[0] == null) {
+					$.modal.alertWarning("请先上传一个附件");
+					return false;
+				}
+
+	        	var formData = awardInfoCollect();
+
+				$.ajax({
+					url: prefix + "/add",
+					type: "post",
+					dataType: "json",
+					cache: false,
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function(result) {
+						$.operate.successCallback(result);
+					}
+				});
+
+	        }
+	    }
+
+ 		//保存奖励信息
+		function awardInfoCollect(){
+			var formData = new FormData();
+			formData.append("awardName",$('#awardName').val());
+			formData.append("firstWinner",$('#firstWinner').val());
+			formData.append("firstWinnerMajor",$('#firstWinnerMajorId').val());
+			formData.append("secondWinner",$('#secondWinner').val());
+			formData.append("secondWinnerMajor",$('#secondWinnerMajorId').val());
+			formData.append("thirdWinner",$('#secondWinner').val());
+			formData.append("thirdWinnerMajor",$('#thirdWinnerMajorId').val());
+			formData.append("firstDept",$('#firstDept').val());
+			formData.append("workWithDept",$('#workWithDept').val());
+			formData.append("awardLeval",$('#awardLeval').val());
+			formData.append("awardFrom",$('#awardFrom').val());
+			formData.append("awardNumber",$('#awardNumber').val());
+			formData.append("awardDate",$('#awardDate').val());
+			//file
+			formData.append("file",$('#file')[0].files[0]);
+			formData.append("note",$('#note').val());
+
+			return formData;
+		}
+
+		/**
+		 * 上传文件
+		 * @param formData
+		 * @returns {formData}
+		 */
+		function uploadFile(formData) {
+			var formData = new FormData();
+
+			formData.append('file', $('#file')[0].files[0]);
+			$.ajax({
+				url: prefix + "/upload",
+				type: 'post',
+				cache: false,
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(result) {
+					$.operate.successCallback(result);
+					alert(JSON.stringify(result))
+				}
+			});
+			return formData;
+		}
+
+		var treeOrder;
+
+		/*用户管理-新增-选择部门树*/
+		function selectDeptTree(order) {
+			treeOrder = order;
+			var treeId = $("#treeId").val();
+			var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+			var url = ctx + "system/dept/selectDeptTree/" + deptId;
+			var options = {
+				title: '选择部门',
+				width: "380",
+				url: url,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			if ($.tree.notAllowParents(tree)) {
+				var body = layer.getChildFrame('body', index);
+
+				if(treeOrder==1){
+					$("#firstWinnerMajorId").val(body.find('#treeId').val());
+					$("#1").val(body.find('#treeName').val());
+				}else if(treeOrder==2){
+					$("#secondWinnerMajorId").val(body.find('#treeId').val());
+					$("#2").val(body.find('#treeName').val());
+				}else if(treeOrder==3){
+					$("#thirdWinnerMajorId").val(body.find('#treeId').val());
+					$("#3").val(body.find('#treeName').val());
+				}
+
+				layer.close(index);
+			}
+		}
+	</script>
+</body>
+</html>

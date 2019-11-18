@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.docMonograph.mapper.DocMonographMapper">
+    
+    <resultMap type="DocMonograph" id="DocMonographResult">
+        <id property="monographId"    column="monograph_id"    />
+        <result property="monographName"    column="monograph_name"    />
+        <result property="author1Id"    column="author1_id"    />
+        <result property="author1Name"    column="author1_name"    />
+        <result property="author1MajorId"    column="author1_major_id"    />
+        <result property="author2Name"    column="author2_name"    />
+        <result property="author2MajorId"    column="author2_major_id"    />
+        <result property="authorNameOther"    column="author_name_other"    />
+        <result property="pressName"    column="press_name"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="pressLevel"    column="press_level"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+        <association property="major1"    column="author1_major_id" javaType="Dept"  select="com.ruoyi.project.system.docMonograph.mapper.DocMonographMapper.selectMajor1"/>
+        <association property="major2"    column="author2_major_id" javaType="Dept"  select="com.ruoyi.project.system.docMonograph.mapper.DocMonographMapper.selectMajor2"/>
+</resultMap>
+
+    <resultMap id="deptResult" type="Dept">
+    <id     property="deptId"   column="dept_id"     />
+    <result property="parentId" column="parent_id"   />
+    <result property="deptName" column="dept_name"   />
+    <result property="orderNum" column="order_num"   />
+    <result property="leader"   column="leader"   />
+    <result property="status"   column="dept_status" />
+</resultMap>
+
+    <resultMap type="DocMonographForFileNameConfig" id="DocMonographFileNameConfigResult">
+        <id property="monographId"    column="monograph_id"    />
+        <result property="monographName"    column="monograph_name"    />
+        <result property="author1Id"    column="author1_id"    />
+        <result property="author1Name"    column="author1_name"    />
+        <result property="author1MajorId"    column="author1_major_id"    />
+        <result property="author2Name"    column="author2_name"    />
+        <result property="author2MajorId"    column="author2_major_id"    />
+        <result property="authorNameOther"    column="author_name_other"    />
+        <result property="pressName"    column="press_name"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="pressLevel"    column="press_level"    />
+        <result property="attachFile"    column="attach_file"    />
+        <result property="notes"    column="notes"    />
+
+    </resultMap>
+	<sql id="selectDocMonographVo">
+        select monograph_id, monograph_name, author1_id, author1_name, author1_major_id, author2_name, author2_major_id, author_name_other, press_name, publish_date, press_level, attach_file, notes from sys_doc_monograph
+    </sql>
+    <select id="selectMajor1" parameterType="string" resultMap="deptResult">
+        select dept_name,leader from sys_dept where #{author1_major_id} = dept_id
+    </select>
+    <select id="selectMajor2" parameterType="string" resultMap="deptResult">
+        select dept_name,leader from sys_dept where #{author2_major_id} = dept_id
+    </select>
+    <select id="selectDocMonographList" parameterType="DocMonograph" resultMap="DocMonographResult">
+        select m.* from sys_doc_monograph m
+        <where>
+            <if test="monographId != null "> and m.monograph_id = #{monographId}</if>
+             <if test="monographName != null  and monographName != '' "> and m.monograph_name = #{monographName}</if>
+             <if test="author1Id != null "> and m.author1_id = #{author1Id}</if>
+             <if test="author1Name != null  and author1Name != '' "> and m.author1_name = #{author1Name}</if>
+             <if test="author1MajorId != null "> AND (m.author1_major_id = #{author1MajorId} OR m.author1_major_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET (#{author1MajorId},ancestors) ))</if>
+             <if test="author2Name != null  and author2Name != '' "> and m.author2_name = #{author2Name}</if>
+             <if test="author2MajorId != null "> and m.author2_major_id = #{author2MajorId}</if>
+             <if test="authorNameOther != null  and authorNameOther != '' "> and m.author_name_other = #{authorNameOther}</if>
+             <if test="pressName != null  and pressName != '' "> and m.press_name = #{pressName}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(m.publish_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(m.publish_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+             <!--<if test="publishDate != null "> and m.publish_date = #{publishDate}</if>-->
+             <if test="pressLevel != null  and pressLevel != '' "> and m.press_level = #{pressLevel}</if>
+             <if test="attachFile != null  and attachFile != '' "> and m.attach_file = #{attachFile}</if>
+             <if test="notes != null  and notes != '' "> and m.notes = #{notes}</if></where>
+/*        ${params.dataScope}*/
+    </select>
+    
+    <select id="selectDocMonographById" parameterType="Integer" resultMap="DocMonographResult">
+        <include refid="selectDocMonographVo"/>
+        where monograph_id = #{monographId}
+    </select>
+        
+    <insert id="insertDocMonograph" parameterType="DocMonograph" useGeneratedKeys="true" keyProperty="monographId">
+        insert into sys_doc_monograph
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="monographName != null  and monographName != ''  ">monograph_name,</if>
+			<if test="author1Id != null  ">author1_id,</if>
+			<if test="author1Name != null  and author1Name != ''  ">author1_name,</if>
+			<if test="author1MajorId != null  ">author1_major_id,</if>
+			<if test="author2Name != null  and author2Name != ''  ">author2_name,</if>
+			<if test="author2MajorId != null  ">author2_major_id,</if>
+			<if test="authorNameOther != null  and authorNameOther != ''  ">author_name_other,</if>
+			<if test="pressName != null  and pressName != ''  ">press_name,</if>
+			<if test="publishDate != null  ">publish_date,</if>
+			<if test="pressLevel != null  and pressLevel != ''  ">press_level,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+			<if test="notes != null  and notes != ''  ">notes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="monographName != null  and monographName != ''  ">#{monographName},</if>
+			<if test="author1Id != null  ">#{author1Id},</if>
+			<if test="author1Name != null  and author1Name != ''  ">#{author1Name},</if>
+			<if test="author1MajorId != null  ">#{author1MajorId},</if>
+			<if test="author2Name != null  and author2Name != ''  ">#{author2Name},</if>
+			<if test="author2MajorId != null  ">#{author2MajorId},</if>
+			<if test="authorNameOther != null  and authorNameOther != ''  ">#{authorNameOther},</if>
+			<if test="pressName != null  and pressName != ''  ">#{pressName},</if>
+			<if test="publishDate != null  ">#{publishDate},</if>
+			<if test="pressLevel != null  and pressLevel != ''  ">#{pressLevel},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+			<if test="notes != null  and notes != ''  ">#{notes},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDocMonograph" parameterType="DocMonograph">
+        update sys_doc_monograph
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="monographName != null  and monographName != ''  ">monograph_name = #{monographName},</if>
+            <if test="author1Id != null  ">author1_id = #{author1Id},</if>
+            <if test="author1Name != null  and author1Name != ''  ">author1_name = #{author1Name},</if>
+            <if test="author1MajorId != null  ">author1_major_id = #{author1MajorId},</if>
+            <if test="author2Name != null  and author2Name != ''  ">author2_name = #{author2Name},</if>
+            <if test="author2MajorId != null  ">author2_major_id = #{author2MajorId},</if>
+            <if test="authorNameOther != null  and authorNameOther != ''  ">author_name_other = #{authorNameOther},</if>
+            <if test="pressName != null  and pressName != ''  ">press_name = #{pressName},</if>
+            <if test="publishDate != null  ">publish_date = #{publishDate},</if>
+            <if test="pressLevel != null  and pressLevel != ''  ">press_level = #{pressLevel},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+            <if test="notes != null  and notes != ''  ">notes = #{notes},</if>
+        </trim>
+        where monograph_id = #{monographId}
+    </update>
+
+	<delete id="deleteDocMonographById" parameterType="Integer">
+        delete from sys_doc_monograph where monograph_id = #{monographId}
+    </delete>
+    <delete id="deleteDocMonographByIds" parameterType="String">
+        delete from sys_doc_monograph where monograph_id in 
+        <foreach item="monographId" collection="array" open="(" separator="," close=")">
+            #{monographId}
+        </foreach>
+    </delete>
+    <delete id="deleteAllDocMonograph">
+        delete from sys_doc_monograph
+    </delete>
+    <select id="selectListForFileNameConfig" resultMap="DocMonographFileNameConfigResult">
+        select monograph_id,monograph_name,
+        (select dept_name from sys_dept where dept_id = author1_major_id)author1_major_id,
+         author2_name,
+        (select dept_name from sys_dept where dept_id = author2_major_id)author2_major_id,
+        author_name_other, press_name, publish_date, press_level, attach_file, notes
+        from sys_doc_monograph
+        WHERE
+        <foreach collection="list" index="index" item="monographId" open=""
+                 separator="or" close="">
+            monograph_id = #{monographId}
+        </foreach>
+    </select>
+</mapper>
