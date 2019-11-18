@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" >
+<head>
+	<th:block th:include="include :: header('修改教材/出版物')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-publication-edit" th:object="${publication}">
+
+            <input id="pbId" name="pbId" th:field="*{pbId}"  type="hidden">
+
+			<input name="deptId" id="treeId" type="hidden"  th:field="*{author1Major.deptId}" />
+			<input name="dept2Id" id="tree2Id" type="hidden"  th:field="*{author2Major.deptId}" />
+
+			<input id="attachFile" type="hidden"  th:field="*{attachFile}" />
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>类别：</label>
+				<div class="col-sm-8">
+					<select id="pbKind" name="pbKind" th:with="type=${@dict.getType('sys_pb_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">题目：</label>
+				<div class="col-sm-8">
+					<input id="pbTitle" name="pbTitle" th:field="*{pbTitle}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者编号：</label>
+				<div class="col-sm-8">
+					<input id="author1Id" name="author1Id" th:field="*{author1Id}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一作者姓名：</label>
+				<div class="col-sm-8">
+					<input id="author1Name" name="author1Name" th:field="*{author1Name}" class="form-control" type="text">
+				</div>
+			</div>
+
+
+			<!--部门树-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一作者所在专业：：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input name="author1MajorId" th:field="*{author1Major.deptName}"  id="treeName" type="text" placeholder="请选择专业" class="form-control authorMajor" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者编号：</label>
+				<div class="col-sm-8">
+					<input id="author2Id" name="author2Id" th:field="*{author2Id}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第二作者姓名：</label>
+				<div class="col-sm-8">
+					<input id="author2Name" name="author2Name" th:field="*{author2Name}" class="form-control" type="text">
+				</div>
+			</div>
+
+
+			<!--部门树-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第二作者所在专业：：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input name="author2MajorId" th:field="*{author2Major.deptName}" id="treeName_author2" type="text" placeholder="请选择专业" class="form-control authorMajor" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">其他作者名字：</label>
+				<div class="col-sm-8">
+					<input id="authorNameOther" name="authorNameOther" th:field="*{authorNameOther}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">期刊名字：</label>
+				<div class="col-sm-8">
+					<input id="publisherName" name="publisherName" th:field="*{publisherName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">刊号：</label>
+				<div class="col-sm-8">
+					<input id="publishNumber" name="publishNumber" th:field="*{publishNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>出版社级别：</label>
+				<div class="col-sm-8">
+					<select id="publisherLevel" name="publisherLevel" th:with="type=${@dict.getType('sys_publisher_level')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>出版时间：</label>
+				<div class="col-sm-8">
+					<input id="publishDate" name="publishDate" th:value="${#dates.format(publication.publishDate,'yyyy-MM-dd')}" class="time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">ISSN编号：</label>
+				<div class="col-sm-8">
+					<input id="issnNumber" name="issnNumber" th:field="*{issnNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">文件预览：</label>
+				<div class="col-sm-8">
+					<a class="btn btn-link btn-sm" shiro:hasPermission="system:publication:publication" th:onclick="'showFile(\'' + *{pbId} + '\');'"><i class="fa fa-file-pdf-o"></i>	预览文件</a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+				<div class="col-sm-8">
+					<button id="modifyBtn" class="btn btn-success btn-sm" type="button" onclick="showFileInput()">点击修改</button>
+				</div>
+			</div>
+			<div id="fileInput" class="form-group hidden">
+				<label class="col-sm-3 control-label"></label>
+				<div class="col-sm-8">
+					<div class="wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="file" name="file" class="form-control" type="file" multiple>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="notes" name="notes" th:field="*{notes}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+
+	<script th:inline="javascript" type="text/javascript">
+
+
+		var prefix = ctx + "system/publication";
+		var modified = false;
+
+
+		function showFileInput(){
+			if(modified){
+				modified = false;
+				$("#fileInput").addClass("hidden");
+				$("#modifyBtn").text("点击修改");
+			}else{
+				modified=true;
+				$("#fileInput").removeClass("hidden");
+				$("#modifyBtn").text("取消修改");
+			}
+		}
+		 function showFile(pbId) {
+			 var url = "/system/publication/getAttachFile?pbId=";
+			 $.operate.pdfPreview(url+pbId);
+		 }
+
+
+		function submitHandler() {
+			var formData = new FormData();
+
+			if (modified==true && $('#file')[0].files[0] == null) {
+				$.modal.alertWarning("请先选择文件路径");
+				return false;
+			}
+
+			formData.append('pbId',[[${publication.pbId}]]);
+
+			formData.append('file', $('#file')[0].files[0]);
+
+			formData.append('pbKind',$('#pbKind').val());
+			formData.append('pbTitle',$('#pbTitle').val());
+			formData.append('author1Id',$('#author1Id').val());
+			formData.append('author1Name',$('#author1Name').val());
+			formData.append('author1MajorId',$('#treeId').val());
+			formData.append('author2Id',$('#author2Id').val());
+			formData.append('author2Name',$('#author2Name').val());
+			formData.append('author2MajorId',$('#tree2Id').val());
+
+			formData.append('authorNameOther',$('#authorNameOther').val());
+			formData.append('publisherName',$('#publisherName').val());
+			formData.append('publisherLevel',$('#publisherLevel').val());
+			formData.append('publishNumber',$('#publishNumber').val());
+			formData.append('publishDate',$('#publishDate').val());
+
+			formData.append('attachFile',$('#attachFile').val());
+
+			formData.append('issnNumber',$('#issnNumber').val());
+			formData.append('notes',$('#notes').val());
+
+			$.ajax({
+				url: prefix + "/edit",
+				type: "post",
+				dataType: "json",
+				cache: false,
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(result) {
+					$.operate.successCallback(result);
+				}
+			});
+
+	        // if ($.validate.form()) {
+	        //     $.operate.save(prefix + "/edit", $('#form-publication-edit').serialize());
+	        // }
+	    }
+
+
+		var currentTreeName = "";
+		var tree1Id;
+		var tree2Id;
+
+		$(".authorMajor").click(function () {
+			currentTreeName = $(this).attr("id");
+			var treeId = $("#treeId").val();
+			var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+			var url = ctx + "system/dept/selectDeptTree/"+deptId;
+			var options = {
+				title: '选择专业',
+				width: "380",
+				url: url,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		});
+
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			if ($.tree.notAllowParents(tree)) {
+				var body = layer.getChildFrame('body', index);
+				if(currentTreeName=="treeName"){
+					tree1Id = body.find('#treeId').val();
+					alert(tree1Id);
+				}else {
+					tree2Id = body.find('#tree2Id').val();
+					alert(tree2Id);
+				}
+				$("#"+currentTreeName).val(body.find('#treeName').val());
+				layer.close(index);
+			}
+
+		}
+
+		var filename = [[${publication.attachFile}]];
+		$(document).ready(function () {
+			$('#file').fileinput({
+				uploadUrl: "#",
+				maxFileCount: 1,
+				showUpload:false,
+				maxFileSize:50000,
+				layoutTemplates:{
+					actionUpload: '',
+				},
+			});
+		});
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增软件著作权')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-softwareCopyright-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>软件著作权名称：</label>
+				<div class="col-sm-8">
+					<input id="copyrightName" name="copyrightName" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>登记号：</label>
+				<div class="col-sm-8">
+					<input id="registrationId" name="registrationId" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一著作权人：</label>
+				<div class="col-sm-8">
+					<input id="firstCopyrightOwner" name="firstCopyrightOwner" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>第一著作权人专业：</label>
+				<div class="col-sm-8">
+					<!--<input id="firstCopyrightOwnerMajorId" name="firstCopyrightOwnerMajorId" class="form-control" type="text">-->
+					<div class="input-group">
+						<input id="firstCopyrightOwnerMajorId" type="text" placeholder="请选择专业" class="form-control firstCopyrightOwnerMajor" required>
+						<input hidden name="firstCopyrightOwnerMajorId" type="text" class="firstCopyrightOwnerMajorId">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他著作权人：</label>
+				<div class="col-sm-8">
+					<input id="otherCopyrightOwner" name="otherCopyrightOwner" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">并发完成时间：</label>
+				<div class="col-sm-8">
+					<input id="concurrentCompletionDate" name="concurrentCompletionDate" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">登记时间：</label>
+				<div class="col-sm-8">
+					<input id="registrationDate" name="registrationDate" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>
+				<div class="col-sm-8">
+					<!--<input id="attachFile" name="attachFile" class="form-control" type="text" required>-->
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div id="message"><label id="attachFile-error" class="error" for="attachFile"></label></div>
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="form-group">
+										<label class="font-noraml">多文件上传</label>
+										<div class="file-loading">
+											<input id="attachFile"  name="attachFile" type="file" class="form-control" multiple>
+
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+		var prefix = ctx + "system/softwareCopyright";
+		$("#form-softwareCopyright-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+        var temp = 0;
+		function submitHandler() {
+            if ($('#attachFile')[0].files[0]== null) {
+                if(temp != 1){
+                    $.modal.alertWarning("请先选择文件路径");
+                    return false;
+                }
+            }
+	        if ($.validate.form()) {
+                if ($('#attachFile')[0].files[0] != null) {
+
+                    $.modal.alertWarning("请将文件上传");
+                    return false;
+                }
+	            $.operate.save(prefix + "/add", $('#form-softwareCopyright-add').serialize());
+	        }
+	    }
+
+        var currentTreeName = "";
+        $(".firstCopyrightOwnerMajor").click(function () {
+            currentTreeName = $(this).attr("id");
+            var treeId = $("#treeId").val();
+            var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + deptId;
+            var options = {
+                title: '选择专业',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        });
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                // alert("选择的是"+body.find('#treeId').val());
+                $("#"+currentTreeName).val(body.find('#treeName').val())
+                var firstCopyrightOwnerMajor = $("input."+currentTreeName);
+                firstCopyrightOwnerMajor.val(body.find('#treeId').val());
+                layer.close(index);
+            }
+        }
+        $("#attachFile").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': prefix+'/addFile',
+            overwriteInitial: false,
+            initialPreviewAsData: true,
+        }).on("fileuploaded",function (event, data, previewId, index) {
+            temp = 1;
+        });
+	</script>
+</body>
+</html>

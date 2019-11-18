@@ -13,14 +13,25 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 public class FileNameConfig extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** 序号 */
 	private Integer fileNameId;
 	/** 文件类型 */
 	private String fileType;
 	/** 命名规则 */
 	private String nameRule;
-	public FileNameConfig(){
+    /** 文件类型 */
+    private String fileDictType;
+
+    public String getFileDictType() {
+        return fileDictType;
+    }
+
+    public void setFileDictType(String fileDictType) {
+        this.fileDictType = fileDictType;
+    }
+
+    public FileNameConfig(){
 		super();
 	}
 	public FileNameConfig(String fileType) {
@@ -28,40 +39,41 @@ public class FileNameConfig extends BaseEntity
 		this.fileType = fileType;
 	}
 
-	public void setFileNameId(Integer fileNameId) 
+	public void setFileNameId(Integer fileNameId)
 	{
 		this.fileNameId = fileNameId;
 	}
 
-	public Integer getFileNameId() 
+	public Integer getFileNameId()
 	{
 		return fileNameId;
 	}
-	public void setFileType(String fileType) 
+	public void setFileType(String fileType)
 	{
 		this.fileType = fileType;
 	}
 
-	public String getFileType() 
+	public String getFileType()
 	{
 		return fileType;
 	}
-	public void setNameRule(String nameRule) 
+	public void setNameRule(String nameRule)
 	{
 		this.nameRule = nameRule;
 	}
 
-	public String getNameRule() 
+	public String getNameRule()
 	{
 		return nameRule;
 	}
 
+    @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("fileNameId", getFileNameId())
-            .append("fileType", getFileType())
-            .append("nameRule", getNameRule())
-            .append("remark", getRemark())
-            .toString();
+        return "FileNameConfig{" +
+                "fileNameId=" + fileNameId +
+                ", fileType='" + fileType + '\'' +
+                ", nameRule='" + nameRule + '\'' +
+                ", fileDictType='" + fileDictType + '\'' +
+                '}';
     }
 }

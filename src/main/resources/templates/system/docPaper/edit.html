@@ -153,7 +153,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">附件预览：</label>
                 <div class="col-sm-8">
-                    <a class="btn btn-link btn-sm" shiro:hasPermission="system:publication:publication" th:onclick="'javascript:$.operate.pdfPreview('+*{paperId}+')' "><i class="fa fa-file-pdf-o"></i>	预览文件</a>
+                    <a class="btn btn-link btn-sm" shiro:hasPermission="system:publication:publication" th:onclick="'javascript:fileShow('+*{paperId}+')' "><i class="fa fa-file-pdf-o"></i>	预览文件</a>
                 </div>
             </div>
 
@@ -375,6 +375,12 @@
                 $("#modifyBtn").text("取消修改");
             }
         }
+        //文件预览
+        function fileShow(paperId){
+            var pathUrl= "system/docPaper/docPaper?pbId=";
+            $.operate.pdfPreview(pathUrl+paperId);
+        }
+        //文件预览结束
     </script>
 </body>
 </html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.user.mapper.IMainMapper">
+
+
+    <select id="selectAttachFileNumber" resultType="com.ruoyi.project.system.user.domain.AttachFileNumber">
+        SELECT sum(award) award,sum(publication) publication,sum(doc_paper) doc_paper FROM (
+         SELECT count(*) award,0 publication,0 doc_paper FROM sys_award
+         UNION ALL
+         SELECT 0 award,count(*) publication,0 doc_paper FROM sys_publication
+         UNION ALL
+         SELECT 0 award,0 publication,count(*) doc_paper FROM sys_doc_paper
+        ) t;
+    </select>
+</mapper>

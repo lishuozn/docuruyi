@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('科研课题详细')" />
+	<th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-user-edit" >
+            <!--<input name="author1MajorId" type="hidden" id="treeId" th:value="${docPaper.paperId}" />-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">课题名称：</label>
+				<!--<div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_type', docPaper.paperKind)}"></div>-->
+				<div class="form-control-static" th:text="${sciResSubject.subjectName}"></div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">课题级别：</label>
+				<div class="col-sm-8">
+				    <!--<div class="form-control-static" th:text="${sciResSubject.subjectLevel}"></div>-->
+				    <div class="form-control-static" th:text="${@dict.getLabel('sys_res_topic_level', sciResSubject.subjectLevel)}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">主持人：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${sciResSubject.moderator}"></div>
+                </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">主持人专业：</label>
+				<div class="col-sm-8">
+				    <div class="form-control-static" th:text="${sciResSubject.sciResSubjectMajor.deptName}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">主持人参与人：</label>
+				<div class="col-sm-8">
+				    <div class="form-control-static" th:text="${sciResSubject.modParticipant}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">第一单位：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${sciResSubject.firstUnit}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">合作单位：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${sciResSubject.cooperUnit}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">立项时间：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="*{#dates.format(sciResSubject.projectDate, 'yyyy-MM-dd')}"></div>
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">资助金额(万元)：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${sciResSubject.grants}"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">到账金额(万元)：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${sciResSubject.arrivalAmount}"></div>
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">结题时间：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="*{#dates.format(sciResSubject.concludingDate, 'yyyy-MM-dd')}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">项目来源：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${sciResSubject.projectSource}"></div>
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">是否结题：</label>
+                <div class="col-sm-8">
+                    <div class="form-control-static" th:text="${@dict.getLabel('sys_subject_is_finished', sciResSubject.isFinished)}"></div>
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">是否按期结题：</label>
+				<div class="col-sm-8">
+                    <div class="form-control-static" th:text="${@dict.getLabel('sys_subject_is_finished_on_time', sciResSubject.isFinishedOnTime)}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+                    <!--<div class="form-control-static" th:text="${docPaper.publishDate}"></div>-->
+                    <div class="form-control-static" th:text="${sciResSubject.notes}"></div>
+
+				</div>
+			</div>
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">卷号：</label>-->
+				<!--<div class="col-sm-8">-->
+                    <!--<div class="form-control-static" th:text="${docPaper.reelNumber}"></div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">起始页码：</label>-->
+				<!--<div class="col-sm-8">-->
+                    <!--<div class="form-control-static" th:text="${docPaper.pageStart}"></div>-->
+				<!--</div>-->
+			<!--</div>,-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">终止页码：</label>-->
+				<!--<div class="col-sm-8">-->
+                    <!--<div class="form-control-static" th:text="${docPaper.pageEnd}"></div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">基金：</label>-->
+				<!--<div class="col-sm-8">-->
+                    <!--<div class="form-control-static" th:text="${docPaper.funds}"></div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">校内认定级别：</label>-->
+				<!--<div class="col-sm-8">-->
+                    <!--&lt;!&ndash;<div class="form-control-static" th:text="${@dict.getLabel('doc_manage_paper_level', docPaper.levelIdCcec)}"></div>&ndash;&gt;-->
+                    <!--<div class="form-control-static" th:text="${docPaper.levelIdCcec}"></div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label"><span style="color: red; ">*</span>附件：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<div class="wrapper wrapper-content animated fadeInRight">-->
+						<!--<div class="row">-->
+							<!--<div class="ibox float-e-margins">-->
+								<!--<div class="ibox-content">-->
+									<!--<div class="form-group">-->
+										<!--<label class="font-noraml">多文件上传</label>-->
+										<!--<div class="file-loading">-->
+											<!--<input id="attachFile"  name="attachFile" class="form-control" type="file" multiple>-->
+										<!--</div>-->
+									<!--</div>-->
+
+								<!--</div>-->
+							<!--</div>-->
+
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">备注：</label>-->
+				<!--<div class="col-sm-8">-->
+                    <!--<div class="form-control-static" th:text="${docPaper.notes}"></div>-->
+				<!--</div>-->
+			<!--</div>-->
+
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <script th:inline="javascript" type="text/javascript">
+		var prefix = ctx + "demo/operate";
+		
+		$("#form-user-add").validate({
+			onkeyup: false,
+			rules:{
+				userPhone:{
+					isPhone:true
+				},
+				userEmail:{
+					email:true
+				},
+			},
+		    focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	        	$.operate.save(prefix + "/edit", $('#form-user-edit').serialize());
+	        }
+	    }
+        var filename = [[${docPaper.attachFile}]];
+        $(document).ready(function () {
+            $('#attachFile').fileinput({
+                uploadUrl: "#",
+                deleteUrl: prefix+"/removeFile",
+                deleteExtraData:{
+                    pbId:[[${docPaper.paperId}]],
+                    fileUrl:"upload/"+filename,
+                },
+                maxFileCount: 1,
+                showUpload:false,
+                layoutTemplates:{
+                    actionUpload: '',
+                },
+                pdfRendererUrl: 'https://plugins.krajee.com/pdfjs/web/viewer.html',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    "/profile/upload/"+filename,
+                ],
+                initialPreviewConfig: [
+                    {type: 'pdf', size: 307200}
+                ]
+
+            });
+        });
+	</script>
+
+</body>
+</html>

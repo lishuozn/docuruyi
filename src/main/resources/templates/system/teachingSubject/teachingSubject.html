@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('教改课题列表')" />
+	<th:block th:include="include :: layout-latest-css" />
+	<th:block th:include="include :: ztree-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								课题名称：<input type="text" name="subjectName"/>
+							</li>
+
+							<li>
+								课题级别：<select name="subjectLevel" th:with="type=${@dict.getType('sys_teaching_topic_level')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								主持人：<input type="text" name="moderator"/>
+							</li>
+
+							<li>
+								主持人专业：<input type="text" name="modMajorId"/>
+							</li>
+
+							<li>
+								参与人：<input type="text" name="modParticipant"/>
+							</li>
+
+							<li>
+								第一单位：<input type="text" name="firstUnit"/>
+							</li>
+
+							<li class="select-time">
+								<label>立项时间： </label>
+								<input type="text" class="time-input" id="startProjectDate" placeholder="开始" name="params[beginProjectDate]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endProjectDate" placeholder="结束" name="params[endProjectDate]"/>
+							</li>
+							<li>
+								资助金额(万元)：<input type="text" name="grants"/>
+							</li>
+
+							<li>
+								到账金额(万元)：<input type="text" name="arrivalAmount"/>
+							</li>
+
+							<li class="select-time">
+								<label>结题时间： </label>
+								<input type="text" class="time-input" id="startConcludingDate" placeholder="开始" name="params[beginConcludingDate]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endConcludingDate" placeholder="结束" name="params[endConcludingDate]"/>
+							</li>
+							<li>
+								项目来源：<input type="text" name="projectSource"/>
+							</li>
+
+							<li>
+								是否结题：<select name="isFinished" th:with="type=${@dict.getType('sys_teaching_subject_is_finished')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								是否按期结题：<select name="isFinishedOnTime" th:with="type=${@dict.getType('sys_teaching_subject_is_finished_on_time')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								附件：<input type="text" name="attachFile"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="notes"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:teachingSubject:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:teachingSubject:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:teachingSubject:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:teachingSubject:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<a class="btn btn-info" onclick="$.table.multiDownloadFile('teachingSubject','subjectId')" shiro:hasPermission="system:teachingSubject:export">
+					<i class="fa fa-download"></i> 附件下载
+				</a>
+
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.detail()" shiro:hasPermission="system:teachingSubject:export">
+					<i class="fa fa-search"></i> 详细
+				</a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"
+					   data-use-row-attr-func="true"
+					   data-reorderable-rows="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+	 <th:block th:include="include :: bootstrap-table-reorder-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:teachingSubject:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:teachingSubject:remove')}]];
+        var prefix = ctx + "system/teachingSubject";
+        var datas1 = [[${@dict.getType('sys_teaching_topic_level')}]];
+        var datas2 = [[${@dict.getType('sys_teaching_subject_is_finished')}]];
+        var datas3 = [[${@dict.getType('sys_teaching_subject_is_finished_on_time')}]];
+        var getFileUrl = 'system/teachingSubject/teachingSubject?sTId=';
+        var reorderUrl = prefix + "/reorderList";
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                detailUrl: prefix + "/detail/{id}",
+                id:"bootstrap-table",
+                modalName: "教改课题",
+		        showExport: true,
+                onReorderRow: function (data) {
+                    //当拖拽结束后，data为整个表格的数据
+
+                    // $('#bootstrap-table').bootstrapTable('load', data);
+                    $.post(reorderUrl,
+                        {
+                            jsonData: JSON.stringify(data) },//将整张表数据Post，当然，先序列化成Json
+                        function(data) {
+                            if (data != null) {
+                                $.table.refresh();
+                            }
+                        });
+                    // console.log('拖拽结束' + JSON.stringify(data));
+                    return false;
+                },
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'subjectId',
+					title : '教改课题Id',
+					visible: false
+				},
+				{
+					field : 'subjectName', 
+					title : '课题名称',
+					sortable: true
+				},
+				{
+					field : 'subjectLevel', 
+					title : '课题级别',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas1, value);
+		            }
+				},
+				{
+					field : 'moderator', 
+					title : '主持人',
+					sortable: true
+				},
+				{
+					field : 'major.deptName',
+					title : '主持人专业',
+					sortable: true
+				},
+				{
+					field : 'modParticipant', 
+					title : '参与人',
+					sortable: true,
+					visible:false
+				},
+				{
+					field : 'firstUnit', 
+					title : '第一单位',
+					sortable: true,
+					visible:false
+				},
+				{
+					field : 'projectDate', 
+					title : '立项时间',
+					sortable: true
+				},
+				{
+					field : 'grants', 
+					title : '资助金额(万元)',
+					sortable: true
+				},
+				{
+					field : 'arrivalAmount', 
+					title : '到账金额(万元)',
+					sortable: true
+				},
+				{
+					field : 'concludingDate', 
+					title : '结题时间',
+					sortable: true,
+					visible:false
+				},
+				{
+					field : 'projectSource', 
+					title : '项目来源',
+					sortable: true,
+					visible:false
+				},
+				{
+					field : 'isFinished', 
+					title : '是否结题',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas2, value);
+		            }
+				},
+				{
+					field : 'isFinishedOnTime', 
+					title : '是否按期结题',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas3, value);
+		            }
+				},
+				{
+					field : 'attachFile', 
+					title : '附件',
+                    visible:false,
+                    formatter: function(value, row, index) {
+                        return '<a href="javascript:downloadFile(' + row.subjectId + ')"><img style="width:30;height:30px;"  src="/profile/upload/' + row.attachFile + '"/></a>';
+                    }
+				},
+				{
+					field : 'notes', 
+					title : '备注',
+					sortable: true,
+					visible:false
+				},
+				{
+					field : 'attachFileSet',
+					title : '附件操作',
+					sortable: true,
+					formatter: function(value, row, index) {
+
+						// alert(index);
+						var actions = [];
+						var tempUrl = getFileUrl+row.subjectId;
+                        var tt = "teachingSubject";
+                        actions.push('<a class="btn btn-success btn-xs" shiro:hasPermission="system:teachingSubject:teachingSubject" onclick="$.operate.pdfPreview(\''+tempUrl+'\')"><i class="fa fa-file-pdf-o"></i> 预览</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs" shiro:hasPermission="system:teachingSubject:teachingSubject" onclick="$.operate.downloadFile(\''+tt+'\',\'' +row.subjectId + '\')"><i class="fa fa-download"></i>下载</a>');
+                        // actions.push('<a href="system/docMonograph/edit/'+index+'">'+row.attachFile+'</a> ');
+						return actions.join('');
+					}
+				},
+		        {
+		            title: '内容操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.subjectId + '\')"><i class="fa fa-search"></i>详细</a> ');
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.subjectId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.subjectId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        function downloadFile(subjectId){
+            window.location.href = ctx + "system/teachingSubject/downloadFile/" + subjectId;
+        }
+        //批量下载
+        function batchDownload() {
+            var index= $.table.getIdSelections();
+            // alert(index);
+            var  attachFile= $.table.selectColumns('attachFile');
+            var  ids= $.table.selectColumns('subjectId');
+            // var column = $.table.selectFirstColumns();
+            // alert($.table.serialNumber(index));
+            // alert(attachFile)
+            window.location.href = ctx + "system/teachingSubject/downloadFile/batchDownload?attachFile="+attachFile + "&column="+index+"&subjectId="+ids;
+        };
+    </script>
+</body>
+</html>

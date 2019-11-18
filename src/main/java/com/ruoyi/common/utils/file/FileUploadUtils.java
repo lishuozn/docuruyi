@@ -242,4 +242,65 @@ public class FileUploadUtils
         return extension;
     }
 
+    /**
+     * @param baseDir
+     * @param file
+     * @param type
+     * @return
+     * @throws IOException
+     */
+    public static final String uploadWithPreffix(String baseDir, MultipartFile file,String type) throws IOException
+    {
+        try
+        {
+            return uploadWithPreffix(baseDir, file,MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION,type);
+        }
+        catch (Exception e)
+        {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+    /**
+     * @param baseDir
+     * @param file
+     * @param allowedExtension
+     * @param type
+     * @return
+     * @throws FileSizeLimitExceededException
+     * @throws IOException
+     * @throws FileNameLengthLimitExceededException
+     * @throws InvalidExtensionException
+     */
+    public static final String uploadWithPreffix(String baseDir, MultipartFile file, String[] allowedExtension,String type)
+            throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
+            InvalidExtensionException
+    {
+        //获取文件名长度
+        int fileNamelength = file.getOriginalFilename().length();
+        //如果超出给定最大长度100
+        if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
+        {
+            //抛出长度超标异常
+            throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
+        }
+
+        //文件本体大小测试
+        assertAllowed(file, allowedExtension);
+
+        String fileName = extractFilenameByType(file,type);
+
+        File desc = getAbsoluteFile(baseDir, fileName);
+        file.transferTo(desc);
+        return fileName;
+    }
+    /**
+     * 编码文件名
+     */
+    public static final String extractFilenameByType(MultipartFile file,String type)
+    {
+        String filename = file.getOriginalFilename();
+        String extension = getExtension(file);
+        filename = type + "/" +encodingFilename(filename) + "." + extension;
+        return filename;
+    }
 }

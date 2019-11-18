@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.utilityModelPatent.mapper.UtilityModelPatentMapper">
+    
+    <resultMap type="UtilityModelPatent" id="UtilityModelPatentResult">
+        <result property="patentId"    column="patent_id"    />
+        <result property="patentName"    column="patent_name"    />
+        <result property="patentNumber"    column="patent_number"    />
+        <result property="inventor1Name"    column="inventor1_name"    />
+        <result property="inventor1MajorId"    column="inventor1_major_id"    />
+        <result property="otherInventor"    column="other_inventor"    />
+        <result property="patentee"    column="patentee"    />
+        <result property="accreditNoticeDate"    column="accredit_notice_date"    />
+        <result property="attachFile"    column="attach_file"    />
+        <association property="utilityModelPatentMajor"    column="inventor1_major_id" javaType="Dept"  select="com.ruoyi.project.system.utilityModelPatent.mapper.UtilityModelPatentMapper.selectUtilityModelPatentMajor"/>
+    </resultMap>
+    <resultMap id="deptResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+    <resultMap type="UtilityModelPatentFileNameConfig" id="UtilityModelPatentFileNameConfigResult">
+        <result property="patentId"    column="patent_id"    />
+        <result property="patentName"    column="patent_name"    />
+        <result property="patentNumber"    column="patent_number"    />
+        <result property="inventor1Name"    column="inventor1_name"    />
+        <result property="inventor1MajorId"    column="inventor1_major_id"    />
+        <result property="otherInventor"    column="other_inventor"    />
+        <result property="patentee"    column="patentee"    />
+        <result property="accreditNoticeDate"    column="accredit_notice_date"    />
+        <result property="attachFile"    column="attach_file"    />
+    </resultMap>
+	<sql id="selectUtilityModelPatentVo">
+        select patent_id, patent_name, patent_number, inventor1_name, inventor1_major_id, other_inventor, patentee, accredit_notice_date, attach_file from sys_utility_model_patent
+    </sql>
+	
+    <select id="selectUtilityModelPatentList" parameterType="UtilityModelPatent" resultMap="UtilityModelPatentResult">
+        <include refid="selectUtilityModelPatentVo"/>
+        <where>  
+            <if test="patentId != null "> and patent_id = #{patentId}</if>
+             <if test="patentName != null  and patentName != '' "> and patent_name = #{patentName}</if>
+             <if test="patentNumber != null  and patentNumber != '' "> and patent_number = #{patentNumber}</if>
+             <if test="inventor1Name != null  and inventor1Name != '' "> and inventor1_name = #{inventor1Name}</if>
+             <if test="inventor1MajorId != null "> and inventor1_major_id = #{inventor1MajorId}</if>
+             <if test="otherInventor != null  and otherInventor != '' "> and other_inventor = #{otherInventor}</if>
+             <if test="patentee != null  and patentee != '' "> and patentee = #{patentee}</if>
+             <if test="accreditNoticeDate != null "> and accredit_notice_date = #{accreditNoticeDate}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+         </where>
+    </select>
+    
+    <select id="selectUtilityModelPatentById" parameterType="Integer" resultMap="UtilityModelPatentResult">
+        <include refid="selectUtilityModelPatentVo"/>
+        where patent_id = #{patentId}
+    </select>
+        
+    <insert id="insertUtilityModelPatent" parameterType="UtilityModelPatent" useGeneratedKeys="true" keyProperty="patentId">
+        insert into sys_utility_model_patent
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="patentName != null  and patentName != ''  ">patent_name,</if>
+			<if test="patentNumber != null  and patentNumber != ''  ">patent_number,</if>
+			<if test="inventor1Name != null  and inventor1Name != ''  ">inventor1_name,</if>
+			<if test="inventor1MajorId != null  ">inventor1_major_id,</if>
+			<if test="otherInventor != null  and otherInventor != ''  ">other_inventor,</if>
+			<if test="patentee != null  and patentee != ''  ">patentee,</if>
+			<if test="accreditNoticeDate != null  ">accredit_notice_date,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="patentName != null  and patentName != ''  ">#{patentName},</if>
+			<if test="patentNumber != null  and patentNumber != ''  ">#{patentNumber},</if>
+			<if test="inventor1Name != null  and inventor1Name != ''  ">#{inventor1Name},</if>
+			<if test="inventor1MajorId != null  ">#{inventor1MajorId},</if>
+			<if test="otherInventor != null  and otherInventor != ''  ">#{otherInventor},</if>
+			<if test="patentee != null  and patentee != ''  ">#{patentee},</if>
+			<if test="accreditNoticeDate != null  ">#{accreditNoticeDate},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUtilityModelPatent" parameterType="UtilityModelPatent">
+        update sys_utility_model_patent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patentName != null  and patentName != ''  ">patent_name = #{patentName},</if>
+            <if test="patentNumber != null  and patentNumber != ''  ">patent_number = #{patentNumber},</if>
+            <if test="inventor1Name != null  and inventor1Name != ''  ">inventor1_name = #{inventor1Name},</if>
+            <if test="inventor1MajorId != null  ">inventor1_major_id = #{inventor1MajorId},</if>
+            <if test="otherInventor != null  and otherInventor != ''  ">other_inventor = #{otherInventor},</if>
+            <if test="patentee != null  and patentee != ''  ">patentee = #{patentee},</if>
+            <if test="accreditNoticeDate != null  ">accredit_notice_date = #{accreditNoticeDate},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+        </trim>
+        where patent_id = #{patentId}
+    </update>
+
+	<delete id="deleteUtilityModelPatentById" parameterType="Integer">
+        delete from sys_utility_model_patent where patent_id = #{patentId}
+    </delete>
+	
+    <delete id="deleteUtilityModelPatentByIds" parameterType="String">
+        delete from sys_utility_model_patent where patent_id in 
+        <foreach item="patentId" collection="array" open="(" separator="," close=")">
+            #{patentId}
+        </foreach>
+    </delete>
+    <select id="selectUtilityModelPatentMajor" parameterType="string" resultMap="deptResult">
+        select dept_name,leader from sys_dept where #{inventor1_major_id} = dept_id
+    </select>
+
+    <select id="selectListForFileNameConfig"
+            resultMap="UtilityModelPatentFileNameConfigResult">
+        select patent_id,patent_name,patent_number,inventor1_name,
+        (select dept_name from sys_dept where dept_id = inventor1_major_id)inventor1_major_id,
+        other_inventor,patentee,accredit_notice_date,attach_file
+        from sys_utility_model_patent
+        WHERE
+        <foreach collection="list" index="index" item="patentId" open=""
+                 separator="or" close="">
+            patent_id = #{patentId}
+        </foreach>
+    </select>
+</mapper>

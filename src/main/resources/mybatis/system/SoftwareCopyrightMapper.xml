@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.softwareCopyright.mapper.SoftwareCopyrightMapper">
+    
+    <resultMap type="SoftwareCopyright" id="SoftwareCopyrightResult">
+        <result property="copyrightId"    column="copyright_id"    />
+        <result property="copyrightName"    column="copyright_name"    />
+        <result property="registrationId"    column="registration_id"    />
+        <result property="firstCopyrightOwner"    column="first_copyright_owner"    />
+        <result property="firstCopyrightOwnerMajorId"    column="first_copyright_owner_major_id"    />
+        <result property="otherCopyrightOwner"    column="other_copyright_owner"    />
+        <result property="concurrentCompletionDate"    column="concurrent_completion__date"    />
+        <result property="registrationDate"    column="registration_date"    />
+        <result property="attachFile"    column="attach_file"    />
+        <association property="major"    column="first_copyright_owner_major_id" javaType="Dept"  select="com.ruoyi.project.system.softwareCopyright.mapper.SoftwareCopyrightMapper.selectSoftwareCopyrightMajor"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="Dept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"   />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+    <resultMap type="SoftwareCopyrightForFileNameConfig" id="SoftwareCopyrightForFileNameConfigResult">
+        <result property="copyrightId"    column="copyright_id"    />
+        <result property="copyrightName"    column="copyright_name"    />
+        <result property="registrationId"    column="registration_id"    />
+        <result property="firstCopyrightOwner"    column="first_copyright_owner"    />
+        <result property="firstCopyrightOwnerMajorId"    column="first_copyright_owner_major_id"    />
+        <result property="otherCopyrightOwner"    column="other_copyright_owner"    />
+        <result property="concurrentCompletionDate"    column="concurrent_completion__date"    />
+        <result property="registrationDate"    column="registration_date"    />
+        <result property="attachFile"    column="attach_file"    />
+    </resultMap>
+    <sql id="selectSoftwareCopyrightVo">
+        select copyright_id, copyright_name, registration_id, first_copyright_owner, first_copyright_owner_major_id, other_copyright_owner, concurrent_completion__date, registration_date, attach_file from sys_software_copyright
+    </sql>
+    <select id="selectSoftwareCopyrightMajor" parameterType="string" resultMap="deptResult">
+        select dept_name,leader from sys_dept where #{copyright_id} = dept_id
+    </select>
+    <select id="selectSoftwareCopyrightList" parameterType="SoftwareCopyright" resultMap="SoftwareCopyrightResult">
+        <include refid="selectSoftwareCopyrightVo"/>
+        <where>  
+            <if test="copyrightId != null "> and copyright_id = #{copyrightId}</if>
+             <if test="copyrightName != null  and copyrightName != '' "> and copyright_name = #{copyrightName}</if>
+             <if test="registrationId != null  and registrationId != '' "> and registration_id = #{registrationId}</if>
+             <if test="firstCopyrightOwner != null  and firstCopyrightOwner != '' "> and first_copyright_owner = #{firstCopyrightOwner}</if>
+             <if test="firstCopyrightOwnerMajorId != null "> and first_copyright_owner_major_id = #{firstCopyrightOwnerMajorId}</if>
+             <if test="otherCopyrightOwner != null  and otherCopyrightOwner != '' "> and other_copyright_owner = #{otherCopyrightOwner}</if>
+             <if test="concurrentCompletionDate != null "> and concurrent_completion__date = #{concurrentCompletionDate}</if>
+             <if test="registrationDate != null "> and registration_date = #{registrationDate}</if>
+             <if test="attachFile != null  and attachFile != '' "> and attach_file = #{attachFile}</if>
+         </where>
+    </select>
+    
+    <select id="selectSoftwareCopyrightById" parameterType="Integer" resultMap="SoftwareCopyrightResult">
+        <include refid="selectSoftwareCopyrightVo"/>
+        where copyright_id = #{copyrightId}
+    </select>
+        
+    <insert id="insertSoftwareCopyright" parameterType="SoftwareCopyright" useGeneratedKeys="true" keyProperty="copyrightId">
+        insert into sys_software_copyright
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="copyrightName != null  and copyrightName != ''  ">copyright_name,</if>
+			<if test="registrationId != null  and registrationId != ''  ">registration_id,</if>
+			<if test="firstCopyrightOwner != null  and firstCopyrightOwner != ''  ">first_copyright_owner,</if>
+			<if test="firstCopyrightOwnerMajorId != null  ">first_copyright_owner_major_id,</if>
+			<if test="otherCopyrightOwner != null  and otherCopyrightOwner != ''  ">other_copyright_owner,</if>
+			<if test="concurrentCompletionDate != null  ">concurrent_completion__date,</if>
+			<if test="registrationDate != null  ">registration_date,</if>
+			<if test="attachFile != null  and attachFile != ''  ">attach_file,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="copyrightName != null  and copyrightName != ''  ">#{copyrightName},</if>
+			<if test="registrationId != null  and registrationId != ''  ">#{registrationId},</if>
+			<if test="firstCopyrightOwner != null  and firstCopyrightOwner != ''  ">#{firstCopyrightOwner},</if>
+			<if test="firstCopyrightOwnerMajorId != null  ">#{firstCopyrightOwnerMajorId},</if>
+			<if test="otherCopyrightOwner != null  and otherCopyrightOwner != ''  ">#{otherCopyrightOwner},</if>
+			<if test="concurrentCompletionDate != null  ">#{concurrentCompletionDate},</if>
+			<if test="registrationDate != null  ">#{registrationDate},</if>
+			<if test="attachFile != null  and attachFile != ''  ">#{attachFile},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSoftwareCopyright" parameterType="SoftwareCopyright">
+        update sys_software_copyright
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="copyrightName != null  and copyrightName != ''  ">copyright_name = #{copyrightName},</if>
+            <if test="registrationId != null  and registrationId != ''  ">registration_id = #{registrationId},</if>
+            <if test="firstCopyrightOwner != null  and firstCopyrightOwner != ''  ">first_copyright_owner = #{firstCopyrightOwner},</if>
+            <if test="firstCopyrightOwnerMajorId != null  ">first_copyright_owner_major_id = #{firstCopyrightOwnerMajorId},</if>
+            <if test="otherCopyrightOwner != null  and otherCopyrightOwner != ''  ">other_copyright_owner = #{otherCopyrightOwner},</if>
+            <if test="concurrentCompletionDate != null  ">concurrent_completion__date = #{concurrentCompletionDate},</if>
+            <if test="registrationDate != null  ">registration_date = #{registrationDate},</if>
+            <if test="attachFile != null  and attachFile != ''  ">attach_file = #{attachFile},</if>
+        </trim>
+        where copyright_id = #{copyrightId}
+    </update>
+
+	<delete id="deleteSoftwareCopyrightById" parameterType="Integer">
+        delete from sys_software_copyright where copyright_id = #{copyrightId}
+    </delete>
+	
+    <delete id="deleteSoftwareCopyrightByIds" parameterType="String">
+        delete from sys_software_copyright where copyright_id in 
+        <foreach item="copyrightId" collection="array" open="(" separator="," close=")">
+            #{copyrightId}
+        </foreach>
+    </delete>
+    <delete id="deleteAllSoftwareCopyright">
+        delete from sys_software_copyright
+    </delete>
+
+    <select id="selectListForFileNameConfig" resultMap="SoftwareCopyrightForFileNameConfigResult">
+        select copyright_id,copyright_name,registration_id,first_copyright_owner,
+        (select dept_name from sys_dept where dept_id = first_copyright_owner_major_id)first_copyright_owner_major_id,
+        other_copyright_owner,concurrent_completion__date,registration_date,attach_file
+        from sys_software_copyright
+        WHERE
+        <foreach collection="list" index="index" item="copyrightId" open=""
+                 separator="or" close="">
+            copyright_id = #{copyrightId}
+        </foreach>
+    </select>
+</mapper>
